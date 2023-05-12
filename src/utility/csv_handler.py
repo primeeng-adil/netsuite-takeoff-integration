@@ -14,7 +14,6 @@ def read_csv(path: Path | str) -> list:
         reader = csv.reader(csvfile)
         for row in reader:
             data_list.append(row[0])
-        data_list.pop(0)
         return data_list
 
 

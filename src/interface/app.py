@@ -317,7 +317,6 @@ class App(Tk):
 
     def save(self, path, start=0, end=0):
         data = [[self.data_vars[i].get()] for i in range(start, end)]
-        data.insert(0, ['Name'])
         csv_handler.write_csv(path, data)
 
     def save_as(self, default_name, start=0, end=0):
