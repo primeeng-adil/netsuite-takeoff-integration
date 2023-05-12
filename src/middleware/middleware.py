@@ -1,18 +1,11 @@
 import re
 from pathlib import Path
 from selenium.webdriver import Keys
-from sharepoint.dir_handler import DirHandler
-from utility import list_handler
+from src.sharepoint.dir_handler import DirHandler
+from src.utility import list_handler
 from pywebgo.controller import WebController
-from middleware.elements import get_elements, set_user_pass_questions
-
-# These are absolute URLs
-NETSUITE_URL = r"https://6516658-sb1.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=207"
-SHAREPOINT_URL = r"https://primeeengvictoria.sharepoint.com/sites/InternalDev"
-
-# These are URLs relative to the site
-TAKEOFF_URL = r"Shared Documents/Quotes/XXXX-takeoff_1.11.5.xltm"
-CHECKLIST_URL = r"Shared Documents/Quotes/Template_Job Opening Checklist_latest.xltm"
+from .elements import get_elements, set_user_pass_questions
+from src.consts import *
 
 
 def modify_data_keys(data_keys: list) -> None:
