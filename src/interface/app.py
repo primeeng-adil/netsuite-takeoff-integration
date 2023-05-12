@@ -6,11 +6,11 @@ from tkinter.ttk import *
 import tkinter.filedialog
 from tkinter import messagebox
 from pathlib import Path
-from ttkwidgets.autocomplete import AutocompleteCombobox
-from utility import csv_handler
 from threading import Thread
-from middleware.middleware import run_middleware
 from .dropdowns import update
+from src.utility import csv_handler
+from src.middleware.middleware import run_middleware
+from ttkwidgets.autocomplete import AutocompleteCombobox
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
