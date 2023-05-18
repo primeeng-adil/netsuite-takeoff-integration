@@ -413,7 +413,7 @@ class App(Tk):
             'SharePoint Path'
         ]
         for var in self.data_vars:
-            if not var.get() or var.get() == 'Select...':
+            if isinstance(var, StringVar) and not var.get() or var.get() == 'Select...':
                 index = self.data_vars.index(var)
                 messagebox.showerror('Input Error', f"Enter value for '{labels[index]}'.")
                 return True
