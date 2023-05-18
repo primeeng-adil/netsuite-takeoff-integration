@@ -28,7 +28,13 @@ def validate_func(*argv):
     :param argv:
     """
     controller, element = argv[0], argv[1]
-    webelement = controller.get_element(element, timeout=20)
+    if controller.element_exists(controller.elem_handler.elements[4]):
+        index = controller.elem_handler.elements.index(element)
+        answer_element = controller.elem_handler.elements[index + 1]
+        controller.elem_handler.elements.remove(answer_element)
+        return
+
+    webelement = controller.get_element(element, timeout=5)
     answer = questions[webelement.text]
     index = controller.elem_handler.elements.index(element)
     controller.elem_handler.elements[index + 1]['keys'] = answer + Keys.ENTER
@@ -48,6 +54,26 @@ def popup_handler(controller, element):
         controller.execute_actions(web_element, element)
 
 
+def check_for_auto_populate(*argv):
+    controller, element = argv[0], argv[1]
+    web_element = controller.get_element(element, timeout=5)
+    if web_element.get_attribute('value') != '':
+        if web_element.get_attribute('id') == 'password':
+            web_element.send_keys(Keys.ENTER)
+        return
+
+    if web_element.get_attribute('id') == 'email':
+        web_element.send_keys(username)
+    if web_element.get_attribute('id') == 'password':
+        web_element.send_keys(password + Keys.ENTER)
+
+
+def fetch_current_url(*argv):
+    controller, element = argv[0], argv[1]
+    index = controller.elem_handler.elements.index(element)
+    controller.data_handler.add_data(index, element['retrieve'], controller.current_url)
+
+
 def get_elements() -> list:
     """
     Return a list of elements.
@@ -55,11 +81,10 @@ def get_elements() -> list:
     :return: Static element list for WebController
     """
     return [
-        {'loc': 'id', 'value': 'email', 'action': 'send-keys', 'keys': username},
-        {'loc': 'id', 'value': 'password', 'action': 'send-keys', 'keys': password + Keys.ENTER},
+        {'loc': 'id', 'value': 'email', 'custom': check_for_auto_populate},
+        {'loc': 'id', 'value': 'password', 'custom': check_for_auto_populate},
         {'loc': 'css', 'value': r'tbody tbody tr td.smalltextnolink.text-opensans', 'custom': validate_func},
         {'loc': 'name', 'value': 'answer', 'action': 'send-keys'},
-
         {'loc': 'css', 'value': '#custrecord_appfcust_fs_lbl_uir_label + span input', 'action': 'send-keys'},
         {'loc': 'css', 'value': '#custrecord_appfproposalstatus_fs_lbl_uir_label + span input', 'action': 'send-keys'},
         {'loc': 'css', 'value': '#custrecord_proposalmemo_fs_lbl_uir_label + span input', 'action': 'send-keys'},
@@ -73,7 +98,6 @@ def get_elements() -> list:
          'custom': popup_handler, 'wait': 0.1},
         {'loc': 'active', 'action': 'send-keys'},
         {'loc': 'active', 'action': 'send-keys'},
-
         {'loc': 'id', 'value': 'custrecord_appfproj_display', 'action': 'hover'},
         {'loc': 'id', 'value': 'custrecord_appfproj_popup_new', 'action': 'click'},
         {'loc': 'id', 'value': 'companyname', 'action': 'send-keys', 'window': 1},
@@ -88,8 +112,8 @@ def get_elements() -> list:
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'wait': 0.1, 'window': 1},
         {'loc': 'css', 'value': '#jobbillingtype_fs_lbl_uir_label + span input', 'action': 'send-keys', 'window': 1},
-
         {'loc': 'id', 'value': 'btn_secondarymultibutton_submitter', 'action': 'click', 'window': 1},
         {'loc': 'id', 'value': 'btn_secondarymultibutton_submitter', 'action': 'click'},
-        {'loc': 'css', 'value': '#custrecord_appfproj_fs_lbl_uir_label + span', 'retrieve': 'text'}
+        {'loc': 'css', 'value': '#custrecord_appfproj_fs_lbl_uir_label + span', 'retrieve': 'text'},
+        {'custom': fetch_current_url, 'retrieve': 'url'}
     ]
