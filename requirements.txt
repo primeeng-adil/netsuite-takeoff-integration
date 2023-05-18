@@ -1,6 +1,7 @@
 office365==0.3.15
 Office365_REST_Python_Client==2.3.15
 Pillow==9.3.0
-pywebgo==0.0.3
+pywebgo==0.0.4
 selenium==4.7.2
 ttkwidgets==0.13.0
+openpyxl==3.1.2
