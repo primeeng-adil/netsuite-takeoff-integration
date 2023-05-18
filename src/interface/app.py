@@ -4,11 +4,12 @@ from PIL import ImageTk
 from tkinter import *
 from tkinter.ttk import *
 import tkinter.filedialog
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 from pathlib import Path
 from threading import Thread
 from .dropdowns import update
 from src.utility import csv_handler
+from src.consts import DROPDOWN_PATHS
 from src.middleware.middleware import run_middleware
 from ttkwidgets.autocomplete import AutocompleteCombobox
 
@@ -20,6 +21,7 @@ class App(Tk):
     def __init__(self):
         super().__init__()
 
+        self.pb_status = None
         self.pb = None
         self.pb_window = None
         self.tabs = []
@@ -27,6 +29,7 @@ class App(Tk):
         self.data_vars = []
         self.elements = []
         self.pad_x = 40
+        self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
 
         self.__adjust_window()
         self.__add_icon()
@@ -57,7 +60,7 @@ class App(Tk):
 
         self.geometry("{}x{}+{}+{}".format(root_width, root_height, position_right, position_down))
         self.resizable(height=True, width=True)
-        self.title("NetSuite Proposal Generator - v1.0.1")
+        self.title("NetSuite Takeoff Integration - v1.0.1")
 
     def __add_icon(self):
         self.iconbitmap(Path('./data/icon.ico'))
@@ -155,13 +158,17 @@ class App(Tk):
             label.grid(row=row + i, column=col, sticky=W, padx=self.pad_x)
             if labels[field][0] == 'combo':
                 self.__add_dropdown(tab, row + i + 1, col, labels[field][2])
-            else:
-                self.__add__entry(tab, row + i + 1, col)
+            elif labels[field][0] == 'entry':
+                self.__add_entry(tab, row + i + 1, col)
 
-    def __add__entry(self, tab, row, col):
+    def __add_entry(self, tab, row, col):
         str_var = StringVar()
         field = Entry(self.tabs[tab], textvariable=str_var)
         field.grid(row=row, column=col, sticky='ew', padx=self.pad_x)
+        field.bind('<FocusIn>', lambda e: field.select_range(0, END), add='+')
+        field.bind('<FocusIn>', lambda e: field.xview(END), add='+')
+        field.bind('<FocusIn>', lambda e: field.icursor(END), add='+')
+        field.bind('<FocusOut>', lambda e: field.xview(0), add='+')
         self.data_vars.append(str_var)
         self.elements.append(field)
 
@@ -174,6 +181,12 @@ class App(Tk):
         dropdown.bind('<FocusOut>', self.reset_box)
         self.data_vars.append(str_var)
         self.elements.append(dropdown)
+
+    def __add_button(self, tab, row, col, command):
+        str_var = StringVar()
+        button = Button(self.tabs[tab], text="Browse", command=lambda: command(str_var))
+        button.grid(row=row, column=col, sticky=W, padx=self.pad_x, pady=10)
+        self.data_vars.append(str_var)
 
     def open_new_window(self, title, width, height, rows, columns):
         window = Toplevel(self)
@@ -190,15 +203,13 @@ class App(Tk):
         return window
 
     def start_progress(self):
-        pb_status = StringVar()
-        self.data_vars.append(pb_status)
-
+        self.pb_status = StringVar()
         self.pb_window = self.open_new_window("Progress", 400, 300, 6, 3)
         self.pb = Progressbar(self.pb_window, orient=HORIZONTAL, mode='determinate')
         self.pb.grid(row=2, column=0, columnspan=3, sticky=EW, padx=20)
 
-        pb_status.set("Initializing...")
-        status_label = Label(self.pb_window, textvariable=pb_status)
+        self.pb_status.set("Initializing...")
+        status_label = Label(self.pb_window, textvariable=self.pb_status)
         status_label.grid(row=1, column=0, columnspan=3, sticky=W, padx=20)
 
         log = Listbox(self.pb_window, height=6, fg='orange')
@@ -215,7 +226,7 @@ class App(Tk):
         self.pb_window.destroy()
 
     def update_progress(self, status, inc):
-        self.data_vars[-1].set(status + '...')
+        self.pb_status.set(status + '...')
         self.pb['value'] += inc
 
     @staticmethod
@@ -241,11 +252,11 @@ class App(Tk):
         ], 0, 6, 1)
 
     def __add_elements_proposal(self):
-        departments = csv_handler.read_csv(Path('./data/dropdowns/Departments.csv'))
-        classes = csv_handler.read_csv(Path('./data/dropdowns/Classes.csv'))
-        reps = csv_handler.read_csv(Path('./data/dropdowns/ProposalSalesReps.csv'))
-        customers = csv_handler.read_csv(Path('./data/dropdowns/Customers.csv'))
-        items = csv_handler.read_csv(Path('./data/dropdowns/Items.csv'))
+        departments = csv_handler.read_csv(Path(DROPDOWN_PATHS['departments']))
+        classes = csv_handler.read_csv(Path(DROPDOWN_PATHS['classes']))
+        reps = csv_handler.read_csv(Path(DROPDOWN_PATHS['reps']))
+        customers = csv_handler.read_csv(Path(DROPDOWN_PATHS['customers']))
+        items = csv_handler.read_csv(Path(DROPDOWN_PATHS['items']))
 
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         self.__add_heading('Proposal Info', 1, 0)
@@ -262,8 +273,8 @@ class App(Tk):
         ], 1, 1, 1)
 
     def __add_elements_project(self):
-        templates = csv_handler.read_csv(Path('./data/dropdowns/ProjectTemplates.csv'))
-        types = csv_handler.read_csv(Path('./data/dropdowns/ProjectTypes.csv'))
+        templates = csv_handler.read_csv(Path(DROPDOWN_PATHS['templates']))
+        types = csv_handler.read_csv(Path(DROPDOWN_PATHS['types']))
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         self.__add_heading('Project Info', 2, 0)
         self.__add_fields([
@@ -276,7 +287,7 @@ class App(Tk):
             ['combo', 'Project Template:', templates],
             ['combo', 'Project Type:', types],
             ['combo', 'Billing Type:', billing],
-            ['entry', 'SharePoint Path:']
+            ['entry', 'Job Path:']
         ], 2, 1, 1)
 
     def __add_cmd_buttons(self):
@@ -297,9 +308,22 @@ class App(Tk):
         self.data_vars[18] = self.data_vars[8]
         self.elements[18].config(textvariable=self.data_vars[18])
         self.elements[18].config(state='disabled')
-        self.elements[22].insert(0, '/Shared Documents/Quotes/')
         for i in range(5, 8):
             self.elements[i].config(show="*")
+
+        self.__add_button(2, 9, 1, self.browse_directory)
+        self.elements[-1].configure(textvariable=self.data_vars[-1])
+        self.data_vars.remove(self.data_vars[-2])
+
+        bool_var = BooleanVar()
+        bool_var.set(False)
+        cb = Checkbutton(self.tabs[2], text='Configurator', variable=bool_var, onvalue=True, offvalue=False)
+        cb.grid(row=9, column=0, sticky=W, padx=self.pad_x)
+        self.data_vars.append(bool_var)
+
+    @staticmethod
+    def browse_directory(str_var):
+        str_var.set(filedialog.askdirectory())
 
     def get_data(self):
         return [var.get() for var in self.data_vars]
@@ -316,15 +340,16 @@ class App(Tk):
             e.widget.set('Select...')
 
     def save(self, path, start=0, end=0):
+        path.parent.mkdir(exist_ok=True, parents=True)
         data = [[self.data_vars[i].get()] for i in range(start, end)]
         csv_handler.write_csv(path, data)
 
     def save_as(self, default_name, start=0, end=0):
         file_type = [('CSV UTF-8 (Comma delimited)', '*.csv')]
-        path = tkinter.filedialog.asksaveasfilename(
+        path = Path(tkinter.filedialog.asksaveasfilename(
             filetypes=file_type,
             initialfile=default_name
-        )
+        ))
         try:
             self.save(path, start, end)
         except FileNotFoundError:
@@ -343,14 +368,14 @@ class App(Tk):
             return
 
     def save_login(self):
-        self.save(Path('./data/inputs/LoginInfo.csv'), end=8)
+        self.save(self.default_csv_path / 'login_info.csv', end=8)
 
     def save_login_as(self):
         self.save_as('login_data', end=8)
 
     def load_login(self):
         try:
-            self.load(Path('./data/inputs/LoginInfo.csv'))
+            self.load(self.default_csv_path / 'login_info.csv')
         except FileNotFoundError:
             messagebox.showerror('File Not Found', 'No saved login information found from the previous run.')
 
@@ -358,14 +383,14 @@ class App(Tk):
         self.load_as()
 
     def save_inputs(self):
-        self.save(Path('./data/inputs/LastInputs.csv'), start=8, end=len(self.data_vars))
+        self.save(self.default_csv_path / 'last_inputs.csv', start=8, end=len(self.data_vars))
 
     def save_inputs_as(self):
         self.save_as('input_data', start=8, end=len(self.data_vars))
 
     def load_inputs(self):
         try:
-            self.load(Path('./data/inputs/LastInputs.csv'), start=8)
+            self.load(self.default_csv_path / 'last_inputs.csv', start=8)
         except FileNotFoundError:
             messagebox.showerror('File Not Found', 'No saved inputs found from the previous run.')
 
