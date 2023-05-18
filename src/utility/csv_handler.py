@@ -24,7 +24,6 @@ def write_csv(path: Path | str, data: list) -> None:
     :param path: path of the csv to write to
     :param data: a two-dimensional list containing rows and columns
     """
-    path.parent.mkdir(exist_ok=True)
     with open(path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows(data)
