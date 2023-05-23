@@ -1,5 +1,6 @@
 import csv
 from pathlib import Path
+from tkinter import messagebox
 
 
 def read_csv(path: Path | str) -> list:
@@ -9,12 +10,16 @@ def read_csv(path: Path | str) -> list:
     :param path: path of the csv to read from
     :return: a two-dimensional list containing rows and columns
     """
-    with open(path, newline='') as csvfile:
-        data_list = []
-        reader = csv.reader(csvfile)
-        for row in reader:
-            data_list.append(row[0])
-        return data_list
+    try:
+        with open(path, newline='') as csvfile:
+            data_list = []
+            reader = csv.reader(csvfile)
+            for row in reader:
+                data_list.append(row[0])
+            return data_list
+    except FileNotFoundError:
+        messagebox.showerror('File not found', f'Error: cannot find file at {path}')
+        raise FileNotFoundError
 
 
 def write_csv(path: Path | str, data: list) -> None:
