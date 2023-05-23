@@ -165,12 +165,16 @@ class App(Tk):
         str_var = StringVar()
         field = Entry(self.tabs[tab], textvariable=str_var)
         field.grid(row=row, column=col, sticky='ew', padx=self.pad_x)
-        field.bind('<FocusIn>', lambda e: field.select_range(0, END), add='+')
-        field.bind('<FocusIn>', lambda e: field.xview(END), add='+')
-        field.bind('<FocusIn>', lambda e: field.icursor(END), add='+')
-        field.bind('<FocusOut>', lambda e: field.xview(0), add='+')
+        self.bind_events_to_entry(field)
         self.data_vars.append(str_var)
         self.elements.append(field)
+
+    @staticmethod
+    def bind_events_to_entry(entry):
+        entry.bind('<FocusIn>', lambda e: entry.select_range(0, END), add='+')
+        entry.bind('<FocusIn>', lambda e: entry.xview(END), add='+')
+        entry.bind('<FocusIn>', lambda e: entry.icursor(END), add='+')
+        entry.bind('<FocusOut>', lambda e: entry.xview(0), add='+')
 
     def __add_dropdown(self, tab, row, col, options):
         str_var = StringVar()
@@ -191,7 +195,7 @@ class App(Tk):
     def open_new_window(self, title, width, height, rows, columns):
         window = Toplevel(self)
         for cols in range(columns):
-            window.columnconfigure(cols, weight=1)
+            window.columnconfigure(cols, weight=1, uniform='fred')
         for rows in range(rows):
             window.rowconfigure(rows, weight=1)
         window.title(title)
@@ -436,7 +440,41 @@ class App(Tk):
         update_thread.start()
 
     def view_settings(self):
-        pass
+        str_var = StringVar()
+        settings_window = self.open_new_window("Settings", 600, 600, 5, 2)
+
+        settings_heading = Label(settings_window, text="Settings", font=("Tahoma", 12))
+        settings_heading.grid(row=0, column=0, sticky=W, padx=self.pad_x)
+
+        dropdown_lbl = Label(settings_window, text="Dropdowns Directory:")
+        dropdown_lbl.grid(row=1, column=0, sticky=W, padx=self.pad_x)
+
+        browse_entry = Entry(settings_window, textvariable=str_var)
+        browse_entry.grid(row=1, column=1, sticky='ew', padx=(0, self.pad_x))
+        self.bind_events_to_entry(browse_entry)
+
+        browse_btn = Button(settings_window, text="Browse", command=lambda: self.browse_directory(str_var))
+        browse_btn.grid(row=1, column=1, sticky=SW, pady=20)
+
+        login_info_lbl = Label(settings_window, text="Login Save Directory:")
+        login_info_lbl.grid(row=2, column=0, sticky=W, padx=self.pad_x)
+
+        browse_entry = Entry(settings_window, textvariable=str_var)
+        browse_entry.grid(row=2, column=1, sticky='ew', padx=(0, self.pad_x))
+        self.bind_events_to_entry(browse_entry)
+
+        browse_btn = Button(settings_window, text="Browse", command=lambda: self.browse_directory(str_var))
+        browse_btn.grid(row=2, column=1, sticky=SW, pady=20)
+
+        login_info_lbl = Label(settings_window, text="Login Save Directory:")
+        login_info_lbl.grid(row=3, column=0, sticky=W, padx=self.pad_x)
+
+        browse_entry = Entry(settings_window, textvariable=str_var)
+        browse_entry.grid(row=3, column=1, sticky='ew', padx=(0, self.pad_x))
+        self.bind_events_to_entry(browse_entry)
+
+        browse_btn = Button(settings_window, text="Browse", command=lambda: self.browse_directory(str_var))
+        browse_btn.grid(row=3, column=1, sticky=SW, pady=20)
 
     def empty(self):
         pass
