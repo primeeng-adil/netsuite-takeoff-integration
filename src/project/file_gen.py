@@ -8,7 +8,14 @@ from pathlib import Path
 from src.consts import CHECKLIST_PATH
 
 
-def create_takeoff_file(src, dest, proj_data):
+def create_takeoff_file(src: Path, dest: Path, proj_data: dict):
+    """
+    Copy the takeoff template file, add information to it and save it as xlsm.
+
+    :param src: source path of the template file
+    :param dest: destination to save the xlsm file in
+    :param proj_data: object containing project information
+    """
     today_date = datetime.datetime.today().strftime('%d-%m-%Y')
     key_value_pairs = [
         ['XXXX', proj_data['id']],
@@ -26,7 +33,14 @@ def create_takeoff_file(src, dest, proj_data):
     os.remove(dest)
 
 
-def create_checklist_file(src, dest, proj_data):
+def create_checklist_file(src: Path, dest: Path, proj_data: dict):
+    """
+    Copy the checklist template file, add information to it and save it as xlsm.
+
+    :param src: source path of the template file
+    :param dest: destination to save the xlsm file in
+    :param proj_data: object containing project information
+    """
     checklist_wb = load_workbook(src, read_only=False, keep_vba=True)
     checklist_ws = checklist_wb.worksheets[0]
     change_adjacent_cell(checklist_ws, 'PROJECT#', proj_data['id'])
@@ -35,7 +49,14 @@ def create_checklist_file(src, dest, proj_data):
     os.remove(dest)
 
 
-def create_config_file(src, dest, proj_data):
+def create_config_file(src: Path, dest: Path, proj_data: dict):
+    """
+    Copy the configurator template file, add information to it and save it as xlsm.
+
+    :param src: source path of the template file
+    :param dest: destination to save the xlsm file in
+    :param proj_data: object containing project information
+    """
     key_value_pairs = [
         ['Project Number:', proj_data['id']],
         ['Project Name:', proj_data['name']]
@@ -48,9 +69,15 @@ def create_config_file(src, dest, proj_data):
     os.remove(dest)
 
 
-def save_as_xlsm(src, dest):
+def save_as_xlsm(src: Path, dest: Path):
+    """
+    Save the given xltm file as xlsm.
+
+    :param src: source path of the template file
+    :param dest: destination to save the xlsm file in
+    """
     app, command = 'Excel.Application', pythoncom.CoInitialize
-    excel = client.DispatchEx(app, command())
+    excel = client.gencache.EnsureDispatch(app, command())
     excel.DisplayAlerts = False
     wb = excel.Workbooks.Open(str(src))
     filename = str(dest.parent / (dest.stem + '.xlsm'))
@@ -60,7 +87,7 @@ def save_as_xlsm(src, dest):
 # proj_data = {
 #     'id': '1234',
 #     'client': 'Adil',
-#     'type': 'Neww',
+#     'type': 'New',
 #     'name': 'HELLO WORLD',
 #     'url': 'www.google.com'
 # }
