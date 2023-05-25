@@ -1,6 +1,9 @@
 from selenium.webdriver import Keys
 from pywebgo import utils
 
+"""
+Variables to store NetSuite username, password and security questions.
+"""
 questions = {}
 username = ''
 password = ''
@@ -8,8 +11,9 @@ password = ''
 
 def set_user_pass_questions(data_keys):
     """
+    Sets username, password and security questions for NetSuite.
 
-    :param data_keys:
+    :param data_keys: input keys from the user in the app
     """
     global username
     global password
@@ -24,8 +28,9 @@ def set_user_pass_questions(data_keys):
 
 def validate_func(*argv):
     """
+    Answers the security question in NetSuite if prompted.
 
-    :param argv:
+    :param argv: controller, element
     """
     controller, element = argv[0], argv[1]
     if controller.element_exists(controller.elem_handler.elements[4]):
@@ -44,10 +49,10 @@ def popup_handler(controller, element):
     """
     Handle any pop-ups that come along during web navigation.
 
-    :param controller:
-    :param element:
+    :param controller: current instance of the controller
+    :param element: current element in execution
     """
-    if controller.element_exists(element, 2):
+    if controller.element_exists(element, 1):
         identifiers = utils.get_element_identifiers(element)
         (strategy, locator) = (identifiers['strategy'], identifiers['locator'])
         web_element = controller.find_element(strategy, locator)
@@ -55,6 +60,11 @@ def popup_handler(controller, element):
 
 
 def check_for_auto_populate(*argv):
+    """
+    Fill username and password fields only if they are not autopopulated.
+
+    :param argv: controller, element
+    """
     controller, element = argv[0], argv[1]
     web_element = controller.get_element(element, timeout=5)
     if web_element.get_attribute('value') != '':
@@ -69,6 +79,11 @@ def check_for_auto_populate(*argv):
 
 
 def fetch_current_url(*argv):
+    """
+    Get the url of the current web page.
+
+    :param argv: controller, element
+    """
     controller, element = argv[0], argv[1]
     index = controller.elem_handler.elements.index(element)
     controller.data_handler.add_data(index, element['retrieve'], controller.current_url)
@@ -78,7 +93,7 @@ def get_elements() -> list:
     """
     Return a list of elements.
 
-    :return: Static element list for WebController
+    :return: static element list for WebController
     """
     return [
         {'loc': 'id', 'value': 'email', 'custom': check_for_auto_populate},
