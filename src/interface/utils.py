@@ -127,7 +127,7 @@ def save_as(app, default_name, start=0, end=0):
         initialfile=default_name
     ))
     try:
-        app.save(path, start, end)
+        save(app, path, start, end)
     except FileNotFoundError:
         return
 
@@ -141,6 +141,6 @@ def load(app, path, start=0):
 def load_as(app, start=0):
     path = filedialog.askopenfile()
     try:
-        app.load(path.name, start=start)
+        load(app, path.name, start=start)
     except (FileNotFoundError, AttributeError):
         return
