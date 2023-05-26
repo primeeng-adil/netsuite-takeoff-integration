@@ -22,7 +22,7 @@ def create_takeoff_file(src: Path, dest: Path, proj_data: dict):
         ['TODAYSDATE', today_date],
         ['CLIENT', proj_data['client']],
         ['PROJECT NAME', proj_data['name']],
-        ['PROJECT TYPE', proj_data['item']],
+        ['PROJECT TYPE', proj_data['type']],
         ['PROPOSAL-URL', proj_data['url']]
     ]
     takeoff_wb = load_workbook(src, read_only=False, keep_vba=True)
@@ -69,6 +69,25 @@ def create_config_file(src: Path, dest: Path, proj_data: dict):
     os.remove(dest)
 
 
+def update_quote_log(path, proj_data):
+    ql_wb = load_workbook(path, read_only=False, keep_vba=True)
+    ql_ws = ql_wb.worksheets[0]
+    last_row = get_last_empty_row(ql_ws, 'B')
+
+    today_date = datetime.datetime.today().strftime('%d-%b-%y')
+    row_data = [
+        today_date,
+        proj_data['client'],
+        proj_data['path'],
+        proj_data['item'],
+        proj_data['id'],
+        'TBD',
+        proj_data['rep']
+    ]
+    fill_row_with_values(ql_ws, last_row, row_data)
+    ql_wb.save(path)
+
+
 def save_as_xlsm(src: Path, dest: Path):
     """
     Save the given xltm file as xlsm.
@@ -89,6 +108,10 @@ def save_as_xlsm(src: Path, dest: Path):
 #     'client': 'Adil',
 #     'type': 'New',
 #     'name': 'HELLO WORLD',
-#     'url': 'www.google.com'
+#     'url': 'www.google.com',
+#     'path': r'D:\Quotes',
+#     'item': 'item',
+#     'rep': 'Eric'
 # }
+# update_quote_log(r"D:\Quotes\Quote Log rev1.16.xlsm", proj_data)
 # create_checklist_file(CHECKLIST_PATH, Path(r"D:\Quotes\Template_Job Opening Checklist_latest.xltm"), proj_data)
