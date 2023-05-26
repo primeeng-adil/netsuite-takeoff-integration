@@ -59,3 +59,29 @@ def change_adjacent_cells_with_values(sheet, key_value_pairs):
     """
     for key_value_pair in key_value_pairs:
         change_adjacent_cell(sheet, key_value_pair[0], key_value_pair[1])
+
+
+def get_last_empty_row(sheet, column):
+    """
+    Find and return the row number of the first empty cell in a column.
+
+    :param sheet: excel worksheet containing the cells
+    :param column: column used to identify the last row
+    :return: row index of the first empty cell
+    """
+    for cell in sheet[column]:
+        if cell.value is None:
+            return cell.row
+
+
+def fill_row_with_values(sheet, row, values):
+    """
+    Populate the given row with the given values.
+
+    :param sheet: excel worksheet containing the cells
+    :param row: index of the row to be populated
+    :param values: values that the row is to be populated with
+    """
+    row = sheet[row]
+    for value in values:
+        row[values.index(value) + 1].value = value
