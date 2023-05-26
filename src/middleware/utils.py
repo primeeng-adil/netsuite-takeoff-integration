@@ -5,18 +5,17 @@ from src.project import file_gen
 from selenium.webdriver import Keys
 from src.utility import list_handler
 from .elements import get_elements, set_user_pass_questions
-from src.consts import JOB_DIRS, TAKEOFF_PATH, CHECKLIST_PATH, CONFIG_PATH
+from src.consts import JOB_DIRS, TAKEOFF_PATH, CHECKLIST_PATH, CONFIG_PATH, QUOTE_LOG_PATH
 
 
-def make_project_dirs(proj_path: str, proj_data: dict) -> None:
+def make_project_dirs_files(proj_data: dict) -> None:
     """
     Create project directories and files.
 
-    :param proj_path: path to create job directory in
     :param proj_data: data for the project
     """
 
-    proj_dir = Path(proj_path, proj_data['name'])
+    proj_dir = Path(proj_data['path'], proj_data['name'])
     job_dir = Path(proj_dir, f"{proj_data['id']}_{proj_data['item']}")
 
     for subdir in JOB_DIRS:
@@ -37,6 +36,15 @@ def make_project_dirs(proj_path: str, proj_data: dict) -> None:
         file_gen.create_config_file(CONFIG_PATH, config_path, proj_data)
 
 
+def update_quote_log(proj_data):
+    """
+    Add the project information to the Quote Log.
+
+    :param proj_data: ata for the project
+    """
+    file_gen.update_quote_log(QUOTE_LOG_PATH, proj_data)
+
+
 def modify_data_keys(data_keys: list) -> None:
     """
     Modify key list to meet custom requirements.
@@ -52,19 +60,18 @@ def modify_data_keys(data_keys: list) -> None:
     data_keys[-1] += Keys.TAB
 
 
-def generate_element_list(data_keys: list) -> tuple:
+def generate_element_list(data_keys: list) -> list:
     """
     Append keys to their respective elements.
 
     :param data_keys: keys sent in by the user through the app interface
-    :return: elements and path for the project
+    :return: elements for the project
     """
     set_user_pass_questions(data_keys)
-    project_path = data_keys.pop()
     modify_data_keys(data_keys)
     elements = get_elements()
     list_handler.add_keys_to_elements(data_keys, elements, start=4)
-    return elements, project_path
+    return elements
 
 
 def get_proj_id(controller: WebController) -> str:
