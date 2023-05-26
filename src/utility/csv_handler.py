@@ -5,7 +5,7 @@ from tkinter import messagebox
 
 def read_csv(path: Path | str) -> list:
     """
-    Reads and returns data_keys from a csv file.
+    Reads and returns data from a csv file.
 
     :param path: path of the csv to read from
     :return: a two-dimensional list containing rows and columns
@@ -17,6 +17,7 @@ def read_csv(path: Path | str) -> list:
             for row in reader:
                 data_list.append(row[0])
             return data_list
+
     except FileNotFoundError:
         messagebox.showerror('File not found', f'Error: cannot find file at {path}')
         raise FileNotFoundError
@@ -24,7 +25,7 @@ def read_csv(path: Path | str) -> list:
 
 def write_csv(path: Path | str, data: list) -> None:
     """
-    Writes data_keys to a csv file.
+    Writes data to a csv file.
 
     :param path: path of the csv to write to
     :param data: a two-dimensional list containing rows and columns
