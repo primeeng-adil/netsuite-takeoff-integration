@@ -3,6 +3,7 @@ CHROME_USER_PROFILE = r'C:\Users\adil.khan\AppData\Local\Google\Chrome\User Data
 TAKEOFF_PATH = r"A:\Templates\Take Off Templates\XXXX-takeoff_1.11.5.xltm"
 CHECKLIST_PATH = r"Q:\Templates\Job Opening Checklist\Template_Job Opening Checklist_latest.xltm"
 CONFIG_PATH = r'B:\Prime Products\CATALOG\CONFIGURATOR_latest.xltm'
+QUOTE_LOG_PATH = r'D:\Quotes\Quote Log rev1.16.xlsm'
 DROPDOWN_DIR = r'A:/Templates/Take Off Templates/NetSuite data'
 JOB_DIRS = ['Correspondence', 'Info to B drive', 'Purchase Order', 'RFQ', 'Specifications', 'Submittal']
 
