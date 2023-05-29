@@ -5,7 +5,7 @@ from tkinter import *
 from tkinter.ttk import *
 import src.interface.utils as utils
 from pathlib import Path
-from threading import Thread
+from threading import Thread, Event
 from src.utility import csv_handler
 from src.consts import DROPDOWN_PATHS
 from src.middleware.middleware import run_middleware
@@ -17,6 +17,8 @@ class App(Tk):
 
     def __init__(self):
         super().__init__()
+        self.event = Event()
+        self.pause = False
 
         self.pb_status = None
         self.pb = None
@@ -28,7 +30,7 @@ class App(Tk):
         self.pad_x = 40
         self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
 
-        utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1")
+        utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1", 850, 725)
 
         self.__add_icon()
         self.__add_menu()
@@ -142,8 +144,10 @@ class App(Tk):
 
         pb_button = Button(self.pb_window, text="End", command=self.pb_window.destroy)
         pb_button.grid(row=4, column=0, columnspan=3, sticky=W, padx=20, ipadx=5)
-        pb_button = Button(self.pb_window, text="Pause", command=self.pb_window.destroy)
+        pb_button = Button(self.pb_window, text="Pause", command=self.pause_execution)
         pb_button.grid(row=4, column=0, columnspan=3, sticky=W, padx=(135, 0), ipadx=5)
+        pb_button = Button(self.pb_window, text="Resume", command=self.resume_execution)
+        pb_button.grid(row=4, column=0, columnspan=3, sticky=W, padx=(250, 0), ipadx=5)
 
     def stop_progress(self):
         self.pb.grid_forget()
@@ -237,44 +241,48 @@ class App(Tk):
         cb.grid(row=9, column=0, sticky=W, padx=self.pad_x)
         self.data_vars.append(bool_var)
 
+        bool_var = BooleanVar()
+        bool_var.set(False)
+        cb = Checkbutton(self.tabs[2], text='Quote Log', variable=bool_var, onvalue=True, offvalue=False)
+        cb.grid(row=10, column=0, sticky=W, padx=self.pad_x)
+        self.data_vars.append(bool_var)
+
     def save_login(self):
-        utils.save(self, self.default_csv_path / 'login_info.csv', end=8)
+        utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=8)
 
     def save_login_as(self):
-        utils.save_as(self, 'login_data', end=8)
+        utils.save_as(self.data_vars, 'login_data.csv', end=8)
 
     def load_login(self):
         try:
-            utils.load(self, self.default_csv_path / 'login_info.csv')
+            utils.load(self.data_vars, self.default_csv_path / 'login_info.csv')
         except FileNotFoundError:
             utils.messagebox.showerror('File Not Found', 'No saved login information '
                                                          'found from the previous run.')
 
     def load_login_as(self):
-        utils.load_as(self)
+        utils.load_as(self.data_vars)
 
     def save_inputs(self):
-        utils.save(self, self.default_csv_path / 'last_inputs.csv', start=8, end=len(self.data_vars))
+        utils.save(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=8, end=len(self.data_vars))
 
     def save_inputs_as(self):
-        utils.save_as(self, 'input_data', start=8, end=len(self.data_vars))
+        utils.save_as(self.data_vars, 'input_data.csv', start=8, end=len(self.data_vars))
 
     def load_inputs(self):
         try:
-            utils.load(self, self.default_csv_path / 'last_inputs.csv', start=8)
+            utils.load(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=8)
         except FileNotFoundError:
             utils.messagebox.showerror('File Not Found', 'No saved inputs found from '
                                                          'the previous run.')
 
     def load_inputs_as(self):
-        utils.load_as(self, start=8)
+        utils.load_as(self.data_vars, start=8)
 
     def __error_handler(self):
+        required_vars = self.data_vars[:2] + self.data_vars[8:]
         labels = [
             'Username', 'Password',
-            'Question 1', 'Question 2',
-            'Question 3', 'Answer 1',
-            'Answer 2', 'Answer 3',
             'Customer', 'Status',
             'Memo', 'Proposal Sales Rep',
             'Department', 'Class',
@@ -284,18 +292,21 @@ class App(Tk):
             'Project Type', 'Billing Type',
             'SharePoint Path'
         ]
-        for var in self.data_vars:
+        for var in required_vars:
             if isinstance(var, StringVar) and not var.get() or var.get() == 'Select...':
-                index = self.data_vars.index(var)
+                index = required_vars.index(var)
                 utils.messagebox.showerror('Input Error', f"Enter value for '{labels[index]}'.")
                 return True
         return False
 
     def clear_inputs(self):
         for var in self.data_vars:
-            var.set('')
+            if isinstance(var, StringVar):
+                var.set('')
+            elif isinstance(var, BooleanVar):
+                var.set(False)
 
-    def get_data(self):
+    def get_data_keys(self):
         return [var.get() for var in self.data_vars]
 
     @staticmethod
@@ -314,3 +325,9 @@ class App(Tk):
 
     def empty(self):
         pass
+
+    def pause_execution(self):
+        self.pause = True
+
+    def resume_execution(self):
+        self.pause = False
