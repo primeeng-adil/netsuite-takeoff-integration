@@ -13,8 +13,18 @@ def read_csv(path: Path | str) -> list:
         data_list = []
         reader = csv.reader(csvfile)
         for row in reader:
-            data_list.append(row[0])
+            data_list.append(row)
         return data_list
+
+
+def read_csv_column(path: Path | str, column: int = 0) -> list:
+    """
+    Reads and returns data from a csv file.
+
+    :param path: path of the csv to read from
+    :return: a two-dimensional list containing rows and columns
+    """
+    return [row[column] for row in read_csv(path)]
 
 
 def write_csv(path: Path | str, data: list) -> None:

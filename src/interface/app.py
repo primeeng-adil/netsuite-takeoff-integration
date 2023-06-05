@@ -1,4 +1,6 @@
 import ctypes
+import itertools
+
 import PIL.Image
 from PIL import ImageTk
 from tkinter import *
@@ -25,7 +27,7 @@ class App(Tk):
         self.pb_window = None
         self.tabs = []
         self.tab_grid = []
-        self.data_vars = []
+        self.data_vars = {}
         self.elements = []
         self.pad_x = 40
         self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
@@ -123,11 +125,9 @@ class App(Tk):
         self.__add_elements_proposal()
         self.__add_elements_project()
 
-    def __add_button(self, tab, row, col, command):
-        str_var = StringVar()
-        button = Button(self.tabs[tab], text="Browse", command=lambda: command(str_var))
-        button.grid(row=row, column=col, sticky=W, padx=self.pad_x, pady=10)
-        self.data_vars.append(str_var)
+    def __add_browse_button(self, tab, row, col, command):
+        button = Button(self.tabs[tab], text="Browse", command=lambda: command(self.data_vars['Project Path']))
+        button.grid(row=row, column=col, sticky=W, padx=self.pad_x, pady=15)
 
     def start_progress(self):
         self.pb_status = StringVar()
@@ -177,11 +177,11 @@ class App(Tk):
         ], 0, 6, 1)
 
     def __add_elements_proposal(self):
-        departments = csv_handler.read_csv(Path(DROPDOWN_PATHS['departments']))
-        classes = csv_handler.read_csv(Path(DROPDOWN_PATHS['classes']))
-        reps = csv_handler.read_csv(Path(DROPDOWN_PATHS['reps']))
-        customers = csv_handler.read_csv(Path(DROPDOWN_PATHS['customers']))
-        items = csv_handler.read_csv(Path(DROPDOWN_PATHS['items']))
+        departments = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['departments']))
+        classes = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['classes']))
+        reps = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['reps']))
+        customers = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['customers']))
+        items = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['items']))
 
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         utils.add_heading(self, 'Proposal Info', 1, 0)
@@ -198,21 +198,20 @@ class App(Tk):
         ], 1, 1, 1)
 
     def __add_elements_project(self):
-        templates = csv_handler.read_csv(Path(DROPDOWN_PATHS['templates']))
-        types = csv_handler.read_csv(Path(DROPDOWN_PATHS['types']))
+        templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']))
+        types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']))
+        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']))
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
-            ['entry', 'City:'],
-            ['entry', 'Address:'],
-            ['entry', 'Facility:'],
-            ['entry', 'Customer:']
+            ['combo', 'Site Address:', addresses],
+            ['entry', 'Project Scope:'],
+            ['entry', 'Project Path:']
         ], 2, 1, 0)
         utils.add_fields(self, [
             ['combo', 'Project Template:', templates],
             ['combo', 'Project Type:', types],
-            ['combo', 'Billing Type:', billing],
-            ['entry', 'Job Path:']
+            ['combo', 'Billing Type:', billing]
         ], 2, 1, 1)
 
     def __add_cmd_buttons(self):
@@ -223,29 +222,24 @@ class App(Tk):
 
     def __customize(self):
         self.elements[1].config(show="*")
-        self.data_vars[9].set('Initial Review')
-        self.data_vars[10].set('2.0.0 – base bid')
-        self.data_vars[18] = self.data_vars[8]
-        self.elements[18].config(textvariable=self.data_vars[18])
-        self.elements[18].config(state='disabled')
         for i in range(5, 8):
             self.elements[i].config(show="*")
 
-        self.__add_button(2, 9, 1, utils.browse_directory)
-        self.elements[-1].configure(textvariable=self.data_vars[-1])
-        self.data_vars.remove(self.data_vars[-2])
+        self.data_vars['Status'].set('Initial Review')
+        self.data_vars['Memo'].set('2.0.0 – base bid')
+        self.__add_browse_button(2, 7, 0, utils.browse_directory)
 
         bool_var = BooleanVar()
-        bool_var.set(False)
+        bool_var.set(True)
         cb = Checkbutton(self.tabs[2], text='Configurator', variable=bool_var, onvalue=True, offvalue=False)
-        cb.grid(row=9, column=0, sticky=W, padx=self.pad_x)
-        self.data_vars.append(bool_var)
+        cb.grid(row=7, column=1, sticky=W, padx=self.pad_x)
+        self.data_vars.update({'Configurator': bool_var})
 
         bool_var = BooleanVar()
         bool_var.set(False)
         cb = Checkbutton(self.tabs[2], text='Quote Log', variable=bool_var, onvalue=True, offvalue=False)
-        cb.grid(row=10, column=0, sticky=W, padx=self.pad_x)
-        self.data_vars.append(bool_var)
+        cb.grid(row=8, column=1, sticky=NW, padx=self.pad_x)
+        self.data_vars.update({'Quote Log': bool_var})
 
     def save_login(self):
         utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=8)
@@ -270,44 +264,35 @@ class App(Tk):
         utils.save_as(self.data_vars, 'input_data.csv', start=8, end=len(self.data_vars))
 
     def load_inputs(self):
-        try:
-            utils.load(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=8)
-        except FileNotFoundError:
-            utils.messagebox.showerror('File Not Found', 'No saved inputs found from '
-                                                         'the previous run.')
+        utils.load(self.data_vars, self.default_csv_path / 'last_inputs.csv')
 
     def load_inputs_as(self):
-        utils.load_as(self.data_vars, start=8)
+        utils.load_as(self.data_vars)
 
     def __error_handler(self):
-        required_vars = self.data_vars[:2] + self.data_vars[8:]
-        labels = [
-            'Username', 'Password',
-            'Customer', 'Status',
-            'Memo', 'Proposal Sales Rep',
-            'Department', 'Class',
-            'Item', 'City',
-            'Address', 'Facility',
-            'Customer', 'Project Template',
-            'Project Type', 'Billing Type',
-            'SharePoint Path'
-        ]
-        for var in required_vars:
-            if isinstance(var, StringVar) and not var.get() or var.get() == 'Select...':
-                index = required_vars.index(var)
-                utils.messagebox.showerror('Input Error', f"Enter value for '{labels[index]}'.")
+        req_vars = dict(itertools.islice(self.data_vars.items(), 2))
+        req_vars.update(dict(itertools.islice(self.data_vars.items(), 8, len(self.data_vars) - 2)))
+        req_vars.pop('Project Scope')
+        for key in req_vars:
+            req_var = req_vars[key]
+            if isinstance(req_var, StringVar) and not req_var.get() or req_var.get() == 'Select...':
+                utils.messagebox.showerror('Input Error', f"Enter value for '{key}'.")
                 return True
         return False
 
     def clear_inputs(self):
-        for var in self.data_vars:
+        for key in self.data_vars:
+            var = self.data_vars[key]
             if isinstance(var, StringVar):
                 var.set('')
             elif isinstance(var, BooleanVar):
                 var.set(False)
 
-    def get_data_keys(self):
-        return [var.get() for var in self.data_vars]
+    def get_data(self):
+        data_dict = {}
+        for key in self.data_vars:
+            data_dict.update({key: self.data_vars[key].get()})
+        return data_dict
 
     @staticmethod
     def show_success_msg():
