@@ -1,6 +1,7 @@
 import chromedriver_autoinstaller
 import src.middleware.utils as utils
 from pywebgo.controller import WebController
+from src.utility.elem_handler import set_user_pass_questions
 from src.consts import CHROME_USER_PROFILE, NETSUITE_URL
 
 
@@ -16,35 +17,38 @@ def execute_controller(url: list, elements: list) -> WebController:
         f'user-data-dir={CHROME_USER_PROFILE}',
         'start-maximized'
     ]
-    web_controller = WebController(url, options=options, wait=0.2)
+    web_controller = WebController(url, options=options)
     web_controller.run_controller(elements)
     return web_controller
 
 
-def get_proj_data(controller, elements, proj_options):
+def get_proj_data(data_fetched, data, proj_options):
     """
 
-    :param controller: current instance of WebController
-    :param elements: elements for the project
+    :param data_fetched: current instance of WebController
+    :param data: elements for the project
     :param proj_options: user specified options for the project
     :return: data for the project
     """
-    proj_id = utils.get_proj_id(controller)
-    proj_client = elements[4]['keys'][:-1]
-    proj_rep = elements[7]['keys'][:-1]
-    proj_item = elements[15]['keys'][:-1]
-    proj_full_name = elements[18]['keys'][:-1]
-    proj_type = elements[24]['keys'][:-1]
-    proj_name = proj_full_name[proj_full_name.find('_') + 1:]
-    proj_url = controller.data_handler.database[1]['data-keys']
+    proj_item = data['Item']
+    proj_client = data['Customer']
+    proj_type = data['Project Type']
+    proj_scope = data['Project Scope']
+    proj_rep = data['Proposal Sales Rep']
+    proj_name = proj_client + "_" + proj_scope
+    proj_id = utils.get_proj_id(data_fetched)
+    proj_url = utils.get_proj_url(data_fetched)
+    proj_subfac = utils.get_proj_subfac(data_fetched)
 
     proj_data = {
         'id': proj_id,
         'name': proj_name,
-        'item': proj_item,
+        'scope': proj_scope,
         'type': proj_type,
+        'item': proj_item,
         'rep': proj_rep,
         'client': proj_client,
+        'subfac': proj_subfac,
         'url': proj_url
     }
 
@@ -52,16 +56,16 @@ def get_proj_data(controller, elements, proj_options):
     return proj_data
 
 
-def get_proj_options(data_keys: list) -> dict:
+def get_proj_options(data: dict) -> dict:
     """
     Get the user specified options for the project.
 
-    :param data_keys: keys sent in by the user through the app interface
+    :param data: keys sent in by the user through the app interface
     :return: user specified options
     """
-    is_logged = data_keys.pop()
-    has_config = data_keys.pop()
-    proj_path = data_keys.pop()
+    proj_path = data.pop('Project Path')
+    has_config = data.pop('Configurator')
+    is_logged = data.pop('Quote Log')
 
     return {
         'path': proj_path,
@@ -96,22 +100,20 @@ def run_middleware(app) -> None:
     :param app: current app object interacting with the user
     """
     app.start_progress()
-    data_keys = app.get_data_keys()
-    proj_options = get_proj_options(data_keys)
-
+    data = app.get_data()
+    set_user_pass_questions(data)
+    proj_options = get_proj_options(data)
     app.update_progress('Installing Chrome Driver', 5)
     chromedriver_autoinstaller.install()
     app.update_progress('Creating controller elements', 5)
-    elements = utils.generate_element_list(data_keys.copy())
+    elements = utils.generate_elements_with_keys(data)
     app.update_progress('Executing controller', 10)
     controller = execute_controller([NETSUITE_URL], elements)
-    proj_data = get_proj_data(controller, elements, proj_options)
+    proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
     app.update_progress('Creating project files and directories', 40)
     execute_dirs_files_maker(proj_data)
     app.update_progress('Updating the quote log', 20)
     update_quote_log(proj_data)
     app.update_progress('Finishing', 20)
-
-    controller.close()
     app.stop_progress()
     app.show_success_msg()
