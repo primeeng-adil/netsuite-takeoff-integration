@@ -228,6 +228,9 @@ class App(Tk):
         self.data_vars['Memo'].set('2.0.0 – base bid')
         self.__add_browse_button(2, 7, 0, utils.browse_directory)
 
+        tooltip = Label(self.tabs[2], text='(Not required)')
+        tooltip.grid(row=3, column=0, sticky=E, padx=self.pad_x)
+
         bool_var = BooleanVar()
         bool_var.set(True)
         cb = Checkbutton(self.tabs[2], text='Configurator', variable=bool_var, onvalue=True, offvalue=False)
