@@ -295,7 +295,11 @@ class App(Tk):
 
     @staticmethod
     def show_success_msg():
-        utils.show_success_msg()
+        utils.show_info_msg('Success', "Process completed successfully!")
+
+    @staticmethod
+    def show_failure_msg():
+        utils.show_error_msg("Error", "Unexpected error occurred. Please check the browser for more info.")
 
     def run_controller(self):
         if self.__error_handler():

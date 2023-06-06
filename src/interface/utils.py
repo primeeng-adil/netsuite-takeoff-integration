@@ -223,12 +223,24 @@ def load_as(data_vars: dict):
         load(data_vars, Path(browse_path.name))
 
 
-def show_success_msg():
+def show_info_msg(title: str, msg: str):
     """
     Show a success message box.
 
+    :param title: title of the messagebox
+    :param msg: message shown in the messagebox
     """
-    messagebox.showinfo('Success', "Process completed successfully!")
+    messagebox.showinfo(title, msg)
+
+
+def show_error_msg(title: str, msg: str):
+    """
+    Show an error message box.
+
+    :param title: title of the messagebox
+    :param msg: message shown in the messagebox
+    """
+    messagebox.showerror(title, msg)
 
 
 def browse_directory(str_var: StringVar):
