@@ -77,27 +77,37 @@ def generate_elements_with_keys(data: dict) -> list:
 
 def get_proj_id(data: list) -> str:
     """
-    Find and return the project id of the current project.
+    Find and return the id of the current project.
 
     :param data: data scraped by the controller
     :return: job id of the current project
     """
-    proj_id = None
-    if data:
-        proj_title = next((item for item in data if item['type'] == 'text'), None)
-        if proj_title:
-            proj_id = re.search(r'^\S\d+', proj_title['data-keys'])
-    if proj_id:
-        return proj_id.group()
+    proj_title = next((item for item in data if item['type'] == 'text'), None)
+    if proj_title:
+        proj_id = re.search(r'^\S\d+', proj_title['data-keys'])
+        if proj_id:
+            return proj_id.group()
 
 
-def get_proj_subfac(data: list):
+def get_proj_subfac(data: list) -> str:
+    """
+    Find and return the subfacility of the current project.
+
+    :param data: data scraped by the controller
+    :return: subfacility name of the project
+    """
     proj_subfac = next((item for item in data if item['type'] == 'attr[value]'), None)
     if proj_subfac:
         return proj_subfac['data-keys']
 
 
-def get_proj_url(data: list):
+def get_proj_url(data: list) -> str:
+    """
+    Find and return the URL of the current project.
+
+    :param data: data scraped by the controller
+    :return: NetSuite URL of the project
+    """
     proj_url = next((item for item in data if item['type'] == 'url'), None)
     if proj_url:
         return proj_url['data-keys']
