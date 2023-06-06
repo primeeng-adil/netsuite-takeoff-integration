@@ -103,17 +103,23 @@ def run_middleware(app) -> None:
     data = app.get_data()
     set_user_pass_questions(data)
     proj_options = get_proj_options(data)
+
     app.update_progress('Installing Chrome Driver', 5)
     chromedriver_autoinstaller.install()
+
     app.update_progress('Creating controller elements', 5)
     elements = utils.generate_elements_with_keys(data)
+
     app.update_progress('Executing controller', 10)
     controller = execute_controller([NETSUITE_URL], elements)
     proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
+
     app.update_progress('Creating project files and directories', 40)
     execute_dirs_files_maker(proj_data)
+
     app.update_progress('Updating the quote log', 20)
     update_quote_log(proj_data)
+
     app.update_progress('Finishing', 20)
     app.stop_progress()
     app.show_success_msg()
