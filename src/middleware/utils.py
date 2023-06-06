@@ -26,7 +26,7 @@ def make_project_dirs_files(proj_data: dict) -> None:
         Path(job_dir, subdir).mkdir(parents=True, exist_ok=True)
 
     excel_ext = ".xltm"
-    takeoff_name = f"{proj_data['id']}_{proj_data['item']}_takeoff_1.0.0{excel_ext}"
+    takeoff_name = f"{proj_data['id']}_{proj_data['type']}_takeoff_1.0.0{excel_ext}"
     checklist_name = f"{proj_data['id']}_Job Opening Checklist_1.0.0{excel_ext}"
     config_name = f"{proj_data['id']}_CONFIGURATOR_1.0.0{excel_ext}"
 
