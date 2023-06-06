@@ -88,10 +88,6 @@ def fetch_current_url(*argv):
     index = controller.elem_handler.elements.index(element)
     controller.data_handler.add_data(index, element['retrieve'], controller.current_url)
 
-def get_attr(*argv):
-    controller, element = argv[0], argv[1]
-    web_element = controller.get_element(element, timeout=5)
-    print(web_element.get_attribute("value"))
 
 def get_elements() -> list:
     """
@@ -108,7 +104,8 @@ def get_elements() -> list:
         {'loc': 'name', 'value': 'inpt_custrecord_appfproposalstatus', 'action': 'send-keys', 'keys': 'Status'},
         {'loc': 'name', 'value': 'custrecord_proposalmemo', 'action': 'send-keys', 'keys': 'Memo'},
         {'loc': 'name', 'value': 'inpt_custrecord_proposalsales', 'action': 'send-keys', 'keys': 'Proposal Sales Rep'},
-        {'loc': 'name', 'value': 'inpt_custrecord_proposaldepartment', 'action': 'send-keys click', 'keys': 'Department'},
+        {'loc': 'name', 'value': 'inpt_custrecord_proposaldepartment', 'action': 'send-keys click',
+         'keys': 'Department'},
         {'loc': 'name', 'value': 'inpt_custrecord_proposalclass', 'action': 'send-keys click', 'keys': 'Class'},
         {'loc': 'id', 'value': 'recmachcustrecord_proposallink_custrecord_proposalitem_display',
          'action': 'send-keys', 'keys': 'Item'},
@@ -117,7 +114,8 @@ def get_elements() -> list:
         {'loc': 'css', 'value': 'td[data-ns-tooltip="MILESTONE NAME"]', 'action': 'click'},
         {'loc': 'name', 'value': 'custrecord_proposalmilestone', 'action': 'send-keys', 'keys': 'Milestone'},
         {'loc': 'css', 'value': 'td[data-ns-tooltip="QUANTITY"]', 'action': 'click'},
-        {'loc': 'name', 'value': 'custrecord_proposalquantity_formattedValue', 'action': 'send-keys', 'keys': 'Quantity'},
+        {'loc': 'name', 'value': 'custrecord_proposalquantity_formattedValue', 'action': 'send-keys',
+         'keys': 'Quantity'},
         {'loc': 'id', 'value': 'custrecord_appfproj_display', 'action': 'hover'},
         {'loc': 'id', 'value': 'custrecord_appfproj_popup_new', 'action': 'click'},
         {'loc': 'name', 'value': 'parent_display', 'action': 'send-keys', 'keys': 'Customer', 'window': 1},
