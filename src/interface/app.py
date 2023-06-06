@@ -1,6 +1,5 @@
 import ctypes
 import itertools
-
 import PIL.Image
 from PIL import ImageTk
 from tkinter import *
@@ -177,11 +176,11 @@ class App(Tk):
         ], 0, 6, 1)
 
     def __add_elements_proposal(self):
-        departments = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['departments']))
-        classes = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['classes']))
-        reps = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['reps']))
-        customers = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['customers']))
-        items = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['items']))
+        departments = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['departments']), header=True)
+        classes = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['classes']), header=True)
+        reps = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['reps']), header=True)
+        customers = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['customers']), header=True)
+        items = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['items']), header=True)
 
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         utils.add_heading(self, 'Proposal Info', 1, 0)
@@ -198,9 +197,9 @@ class App(Tk):
         ], 1, 1, 1)
 
     def __add_elements_project(self):
-        templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']))
-        types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']))
-        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']))
+        templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']), header=True)
+        types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']), header=True)
+        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['addresses']), column=1, header=True)
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
