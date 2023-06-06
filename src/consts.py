@@ -8,6 +8,7 @@ DROPDOWN_DIR = r'A:/Templates/Take Off Templates/NetSuite data'
 JOB_DIRS = ['Correspondence', 'Info to B drive', 'Purchase Order', 'RFQ', 'Specifications', 'Submittal']
 
 DROPDOWN_PATHS = {
+    'addresses': f'{DROPDOWN_DIR}/NetSuite_Daily_SiteAddress_List.csv',
     'customers': f'{DROPDOWN_DIR}/NetSuite_Daily_Customer_List.csv',
     'departments': f'{DROPDOWN_DIR}/NetSuite_Daily_Department_List.csv',
     'classes': f'{DROPDOWN_DIR}/NetSuite_Daily_Class_List.csv',
