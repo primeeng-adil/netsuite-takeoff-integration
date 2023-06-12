@@ -47,7 +47,7 @@ def validate_func(*argv):
 
 def popup_handler(controller, element):
     """
-    Handle any pop-ups that come along during web navigation.
+    Handle any pop-up prompts that come along during runtime.
 
     :param controller: current instance of the controller
     :param element: current element in execution

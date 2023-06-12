@@ -44,7 +44,7 @@ def update_quote_log(proj_data):
     """
     Add the project information to the Quote Log.
 
-    :param proj_data: ata for the project
+    :param proj_data: data for the project
     """
     file_gen.update_quote_log(QUOTE_LOG_PATH, proj_data)
 
@@ -53,7 +53,7 @@ def update_keys_for_elements(data_keys: dict):
     """
     Modify key list to meet custom requirements.
 
-    :param data_keys: keys sent in by the user through the app interface
+    :param data_keys: keys entered by the user in the app interface
     """
     data_keys.update({
         'Choose': 'DONE',
@@ -66,7 +66,7 @@ def generate_elements_with_keys(data: dict) -> list:
     """
     Append keys to their respective elements.
 
-    :param data: keys sent in by the user through the app interface
+    :param data: keys entered by the user in the app interface
     :return: elements for the project
     """
     update_keys_for_elements(data)
@@ -79,7 +79,7 @@ def get_proj_id(data: list) -> str:
     """
     Find and return the id of the current project.
 
-    :param data: data scraped by the controller
+    :param data: data scraped by the controller during runtime
     :return: job id of the current project
     """
     proj_title = next((item for item in data if item['type'] == 'text'), None)
@@ -93,7 +93,7 @@ def get_proj_subfac(data: list) -> str:
     """
     Find and return the subfacility of the current project.
 
-    :param data: data scraped by the controller
+    :param data: data scraped by the controller during runtime
     :return: subfacility name of the project
     """
     proj_subfac = next((item for item in data if item['type'] == 'attr[value]'), None)
@@ -105,7 +105,7 @@ def get_proj_url(data: list) -> str:
     """
     Find and return the URL of the current project.
 
-    :param data: data scraped by the controller
+    :param data: data scraped by the controller during runtime
     :return: NetSuite URL of the project
     """
     proj_url = next((item for item in data if item['type'] == 'url'), None)

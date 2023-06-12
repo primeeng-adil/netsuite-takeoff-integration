@@ -69,6 +69,12 @@ def create_config_file(src: Path, dest: Path, proj_data: dict):
 
 
 def update_quote_log(path, proj_data):
+    """
+    Add a row entry for the project in the Quote Log.
+
+    :param path: full path of the Quote Log file
+    :param proj_data: object containing project information
+    """
     ql_wb = load_workbook(path, read_only=False, keep_vba=True)
     ql_ws = ql_wb.worksheets[0]
     last_row = get_last_empty_row(ql_ws, 'B')
