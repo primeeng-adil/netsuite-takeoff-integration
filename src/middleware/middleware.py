@@ -1,4 +1,5 @@
 import chromedriver_autoinstaller
+import webbrowser
 import src.middleware.utils as utils
 from pywebgo.controller import WebController
 from src.utility.elem_handler import set_user_pass_questions
@@ -7,7 +8,7 @@ from src.consts import CHROME_USER_PROFILE, NETSUITE_URL
 
 def execute_controller(url: list, elements: list) -> WebController:
     """
-    Execute controller processes.
+    Execute WebController processes.
 
     :param url: URL of the landing page
     :param elements: elements for the WebController to process
@@ -25,8 +26,8 @@ def execute_controller(url: list, elements: list) -> WebController:
 def get_proj_data(data_fetched, data, proj_options):
     """
 
-    :param data_fetched: current instance of WebController
-    :param data: elements for the project
+    :param data_fetched: data retrieved by the controller during runtime
+    :param data: keys entered by the user in the app interface
     :param proj_options: user specified options for the project
     :return: data for the project
     """
@@ -60,7 +61,7 @@ def get_proj_options(data: dict) -> dict:
     """
     Get the user specified options for the project.
 
-    :param data: keys sent in by the user through the app interface
+    :param data: keys entered by the user in the app interface
     :return: user specified options
     """
     proj_path = data.pop('Project Path')
@@ -111,8 +112,12 @@ def run_middleware(app) -> None:
     elements = utils.generate_elements_with_keys(data)
 
     app.update_progress('Executing controller', 10)
+
     controller = execute_controller([NETSUITE_URL], elements)
     proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
+
+    controller.close()
+    webbrowser.open(proj_data['url'])
 
     app.update_progress('Creating project files and directories', 40)
     execute_dirs_files_maker(proj_data)
