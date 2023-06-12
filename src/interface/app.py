@@ -77,7 +77,6 @@ class App(Tk):
             ['Save Details', self.save_inputs],
             ['Save Details As...', self.save_inputs_as],
             ['Settings', self.view_settings],
-            ['Update Dropdowns', self.empty],
             ['Exit', self.destroy]
         ]
         edit_cmd_funcs = [
@@ -99,7 +98,7 @@ class App(Tk):
         menu_bar.add_cascade(label='Edit', menu=edit)
         menu_bar.add_cascade(label='Help', menu=help_)
 
-        utils.fill_menu_cascade(file, file_cmd_funcs, [3, 7, 8, 9])
+        utils.fill_menu_cascade(file, file_cmd_funcs, [3, 7, 8])
         utils.fill_menu_cascade(edit, edit_cmd_funcs, [])
         utils.fill_menu_cascade(help_, help_cmd_funcs, [1])
         self.config(menu=menu_bar)
@@ -312,7 +311,8 @@ class App(Tk):
         execution_thread.start()
 
     def view_settings(self):
-        pass
+        settings = utils.open_new_window(self, 'Settings', 500, 500, 5, 2)
+
 
     def empty(self):
         pass
