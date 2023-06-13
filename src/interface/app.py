@@ -47,6 +47,7 @@ class App(Tk):
         self.elements = []
         self.pad_x = 40
         self.default_csv_path = None
+        self.settings_window = None
 
         utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1", 850, 725)
 
@@ -455,54 +456,60 @@ class App(Tk):
         """
         Display the application settings window.
         """
-        settings = utils.open_new_window(self, 'Settings', 500, 545, 14, 2)
+        if self.settings_window and Toplevel.winfo_exists(self.settings_window):
+            settings_window = self.settings_window
+            settings_window.focus()
+        else:
+            settings_window = utils.open_new_window(self, 'Settings', 500, 545, 14, 2)
 
-        heading = Label(settings, text='Settings', font=("Tahoma", 12))
+        heading = Label(settings_window, text='Settings', font=("Tahoma", 12))
         heading.grid(row=0, column=0, columnspan=2, sticky=W, pady=20, padx=self.pad_x)
 
-        lb = Label(settings, text='Execution Delay (s): ')
+        lb = Label(settings_window, text='Execution Delay (s): ')
         lb.grid(row=1, column=0, sticky=NW, padx=self.pad_x)
-        en = Entry(settings, textvariable=self.settings['delay'])
+        en = Entry(settings_window, textvariable=self.settings['delay'])
         en.grid(row=1, column=1, sticky='ew', padx=(0, self.pad_x))
 
-        lb = Label(settings, text='Default CSV path: ')
+        lb = Label(settings_window, text='Default CSV path: ')
         lb.grid(row=3, column=0, sticky=NW, padx=self.pad_x)
-        en = Entry(settings, textvariable=self.settings['csv-path'])
+        en = Entry(settings_window, textvariable=self.settings['csv-path'])
         en.grid(row=3, column=1, sticky='ew', padx=(0, self.pad_x))
 
-        self.add_browse_button(settings, 4, 1, 0, utils.browse_directory, self.settings['csv-path'])
+        self.add_browse_button(settings_window, 4, 1, 0, utils.browse_directory, self.settings['csv-path'])
 
-        lb = Label(settings, text='Default Checkboxes:')
+        lb = Label(settings_window, text='Default Checkboxes:')
         lb.grid(row=6, column=0, sticky=NW, padx=self.pad_x)
-        cb = Checkbutton(settings, text='Configurator', variable=self.settings['config'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Configurator', variable=self.settings['config'], onvalue=True, offvalue=False)
         cb.grid(row=6, column=1, sticky=W)
-        cb = Checkbutton(settings, text='Quote Log', variable=self.settings['log'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Quote Log', variable=self.settings['log'], onvalue=True, offvalue=False)
         cb.grid(row=7, column=1, sticky=W)
 
-        lb = Label(settings, text='Default Entries:')
+        lb = Label(settings_window, text='Default Entries:')
         lb.grid(row=9, column=0, sticky=NW, padx=self.pad_x)
 
-        lb = Label(settings, text='Status:')
+        lb = Label(settings_window, text='Status:')
         lb.grid(row=9, column=1, sticky=NW)
-        en = Entry(settings, textvariable=self.settings['status'])
+        en = Entry(settings_window, textvariable=self.settings['status'])
         en.grid(row=10, column=1, sticky='ew', padx=(0, self.pad_x))
 
-        lb = Label(settings, text='Memo:')
+        lb = Label(settings_window, text='Memo:')
         lb.grid(row=11, column=1, sticky=NW)
-        en = Entry(settings, textvariable=self.settings['memo'])
+        en = Entry(settings_window, textvariable=self.settings['memo'])
         en.grid(row=12, column=1, sticky='ew', padx=(0, self.pad_x))
 
-        save_btn = Button(settings, text="Save", command=lambda: self.save_settings(settings))
+        save_btn = Button(settings_window, text="Save", command=lambda: self.save_settings(settings_window))
         save_btn.grid(row=14, columnspan=2, sticky='ew', padx=self.pad_x * 4)
 
-    def save_settings(self, settings_win):
+        self.settings_window = settings_window
+
+    def save_settings(self, settings_window):
         """
         Save the settings in the settings window.
 
-        :param settings_win: window displaying settings
+        :param settings_window: window displaying settings
         """
         utils.save(self.settings, Path('./data/settings.csv'))
-        settings_win.destroy()
+        settings_window.destroy()
 
     def empty(self):
         pass
