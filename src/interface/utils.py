@@ -209,7 +209,7 @@ def load(data_vars: dict, path: Path):
         for row in data:
             data_vars[row[0]].set(row[1])
     except (FileNotFoundError, AttributeError):
-        messagebox.showerror('File not found', f'Error: file with path {path} does not exist.')
+        pass
     except UnicodeDecodeError:
         messagebox.showerror('Unsupported File Type', f'Error: file type {path.suffix} is not supported.')
 
