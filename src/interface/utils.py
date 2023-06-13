@@ -1,3 +1,4 @@
+import itertools
 from pathlib import Path
 from tkinter import END, W
 from tkinter import messagebox, filedialog, StringVar, Toplevel, Menu, Tk, Event
@@ -39,7 +40,7 @@ def open_new_window(app, title: str, width: int, height: int, rows: int, columns
     for cols in range(columns):
         window.columnconfigure(cols, weight=1, uniform='fred')
     for rows in range(rows):
-        window.rowconfigure(rows, weight=1)
+        window.rowconfigure(rows, minsize=30)
     window.title(title)
     window.iconbitmap(Path('./data/icon.ico'))
     position_right = int((app.winfo_screenwidth() - width) / 2)
@@ -92,15 +93,16 @@ def add_fields(app, labels: list, tab: int, row: int, col: int):
         label = Label(app.tabs[tab], text=labels[field][1])
         label.grid(row=row + i, column=col, sticky=W, padx=app.pad_x)
         if labels[field][0] == 'combo':
-            add_dropdown(app, tab, row + i + 1, col, labels[field][2])
+            add_dropdown(app, tab, row + i + 1, col, labels[field][1][:-1], labels[field][2])
         elif labels[field][0] == 'entry':
-            add_entry(app, tab, row + i + 1, col)
+            add_entry(app, tab, row + i + 1, col, labels[field][1][:-1])
 
 
-def add_entry(app, tab: int, row: int, col: int):
+def add_entry(app, tab: int, row: int, col: int, label: str):
     """
     Add a tkinter entry object in the given tab.
 
+    :param label:
     :param app: current app object interacting with the user
     :param tab: index of the tab required
     :param row: index of the row where the entry is to be added
@@ -110,14 +112,15 @@ def add_entry(app, tab: int, row: int, col: int):
     entry = Entry(app.tabs[tab], textvariable=str_var)
     entry.grid(row=row, column=col, sticky='ew', padx=app.pad_x)
     bind_events_to_entry(entry)
-    app.data_vars.append(str_var)
+    app.data_vars.update({label: str_var})
     app.elements.append(entry)
 
 
-def add_dropdown(app, tab: int, row: int, col: int, options: list):
+def add_dropdown(app, tab: int, row: int, col: int, label: str, options: list):
     """
     Add a tkinter dropdown object in the given tab.
 
+    :param label:
     :param app: current app object interacting with the user
     :param tab: index of the tab required
     :param row: index of the row where the dropdown is to be added
@@ -130,7 +133,7 @@ def add_dropdown(app, tab: int, row: int, col: int, options: list):
     dropdown.grid(row=row, column=col, sticky='ew', padx=app.pad_x)
     dropdown.bind('<FocusIn>', clear_widget)
     dropdown.bind('<FocusOut>', reset_widget)
-    app.data_vars.append(str_var)
+    app.data_vars.update({label: str_var})
     app.elements.append(dropdown)
 
 
@@ -159,7 +162,7 @@ def add_heading(app, text: str, tab: int, row: int):
     heading.grid(row=row, column=0, columnspan=2, sticky=W, pady=20, padx=app.pad_x)
 
 
-def save(data_vars: list, path: Path, start: int = 0, end: int = 0):
+def save(data_vars: dict, path: Path, start: int = 0, end: int = 0):
     """
     Save the passed data objects to a csv file at the given path.
 
@@ -168,12 +171,15 @@ def save(data_vars: list, path: Path, start: int = 0, end: int = 0):
     :param start: index defining the start position of data objects
     :param end: index defining the end position of the data objects
     """
+    if not end:
+        end = len(data_vars)
     path.parent.mkdir(exist_ok=True, parents=True)
-    data = [[data_vars[i].get()] for i in range(start, end)]
+    filtered_vars = dict(itertools.islice(data_vars.items(), start, end))
+    data = [[key, data_vars[key].get()] for key in filtered_vars]
     csv_handler.write_csv(path, data)
 
 
-def save_as(data_vars: list, default_name: str, start: int = 0, end: int = 0):
+def save_as(data_vars: dict, default_name: str, start: int = 0, end: int = 0):
     """
     Save the passed data objects to a csv file at a user specified path.
 
@@ -183,55 +189,60 @@ def save_as(data_vars: list, default_name: str, start: int = 0, end: int = 0):
     :param end: index defining the end position of the data objects
     """
     file_type = [('CSV UTF-8 (Comma delimited)', '*.csv')]
-    path = Path(filedialog.asksaveasfilename(
+    browse_path = filedialog.asksaveasfilename(
         filetypes=file_type,
         initialfile=default_name
-    ))
-    try:
-        save(data_vars, path, start, end)
-    except FileNotFoundError:
-        return
+    )
+    if browse_path:
+        save(data_vars, Path(browse_path), start, end)
 
 
-def load(data_vars: list, path: Path, start: int = 0):
+def load(data_vars: dict, path: Path):
     """
     Load the passed data objects from a csv file at the given path.
 
     :param data_vars: data objects
     :param path: path of the csv file
-    :param start: index defining the start position of the data objects
     """
     try:
         data = csv_handler.read_csv(path)
-        for i in range(len(data)):
-            data_vars[i + start].set(data[i])
+        for row in data:
+            data_vars[row[0]].set(row[1])
     except (FileNotFoundError, AttributeError):
-        messagebox.showerror('File not found', f'Error: file with path {path} does not exist.')
+        pass
+    except UnicodeDecodeError:
+        messagebox.showerror('Unsupported File Type', f'Error: file type {path.suffix} is not supported.')
 
 
-def load_as(data_vars: list, start: int = 0):
+def load_as(data_vars: dict):
     """
-    Load the passed data objects from a csv file at a user specified path.
+    Load the passed data objects from a csv file at a user specified browse_path.
 
     :param data_vars: data objects
-    :param start: index defining the start position of the data objects
     """
-    path = filedialog.askopenfile()
-    if not path:
-        return
-
-    try:
-        load(data_vars, Path(path.name), start=start)
-    except FileNotFoundError:
-        return
+    browse_path = filedialog.askopenfile()
+    if browse_path:
+        load(data_vars, Path(browse_path.name))
 
 
-def show_success_msg():
+def show_info_msg(title: str, msg: str):
     """
     Show a success message box.
 
+    :param title: title of the messagebox
+    :param msg: message shown in the messagebox
     """
-    messagebox.showinfo('Success', "Process completed successfully!")
+    messagebox.showinfo(title, msg)
+
+
+def show_error_msg(title: str, msg: str):
+    """
+    Show an error message box.
+
+    :param title: title of the messagebox
+    :param msg: message shown in the messagebox
+    """
+    messagebox.showerror(title, msg)
 
 
 def browse_directory(str_var: StringVar):

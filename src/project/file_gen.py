@@ -5,7 +5,6 @@ from src.utility.excel_handler import *
 import win32com.client as client
 import pythoncom
 from pathlib import Path
-from src.consts import CHECKLIST_PATH
 
 
 def create_takeoff_file(src: Path, dest: Path, proj_data: dict):
@@ -70,6 +69,12 @@ def create_config_file(src: Path, dest: Path, proj_data: dict):
 
 
 def update_quote_log(path, proj_data):
+    """
+    Add a row entry for the project in the Quote Log.
+
+    :param path: full path of the Quote Log file
+    :param proj_data: object containing project information
+    """
     ql_wb = load_workbook(path, read_only=False, keep_vba=True)
     ql_ws = ql_wb.worksheets[0]
     last_row = get_last_empty_row(ql_ws, 'B')
@@ -102,16 +107,3 @@ def save_as_xlsm(src: Path, dest: Path):
     filename = str(dest.parent / (dest.stem + '.xlsm'))
     wb.SaveAs(Filename=filename, FileFormat=52, CreateBackup=False)
     wb.Close()
-
-# proj_data = {
-#     'id': '1234',
-#     'client': 'Adil',
-#     'type': 'New',
-#     'name': 'HELLO WORLD',
-#     'url': 'www.google.com',
-#     'path': r'D:\Quotes',
-#     'item': 'item',
-#     'rep': 'Eric'
-# }
-# update_quote_log(r"D:\Quotes\Quote Log rev1.16.xlsm", proj_data)
-# create_checklist_file(CHECKLIST_PATH, Path(r"D:\Quotes\Template_Job Opening Checklist_latest.xltm"), proj_data)
