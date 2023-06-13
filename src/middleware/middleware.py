@@ -6,19 +6,20 @@ from src.utility.elem_handler import set_user_pass_questions
 from src.consts import CHROME_USER_PROFILE, NETSUITE_URL
 
 
-def execute_controller(url: list, elements: list) -> WebController:
+def execute_controller(url: list, elements: list, wait: float) -> WebController:
     """
     Execute WebController processes.
 
     :param url: URL of the landing page
     :param elements: elements for the WebController to process
+    :param wait: delay (in seconds) before executing each action
     :return: instance of WebController
     """
     options = [
         f'user-data-dir={CHROME_USER_PROFILE}',
         'start-maximized'
     ]
-    web_controller = WebController(url, options=options)
+    web_controller = WebController(url, options=options, wait=wait)
     web_controller.run_controller(elements)
     return web_controller
 
@@ -36,7 +37,7 @@ def get_proj_data(data_fetched, data, proj_options):
     proj_type = data['Project Type']
     proj_scope = data['Project Scope']
     proj_rep = data['Proposal Sales Rep']
-    proj_name = proj_client + "_" + proj_scope
+    proj_name = f"{proj_client}_{proj_scope}"
     proj_id = utils.get_proj_id(data_fetched)
     proj_url = utils.get_proj_url(data_fetched)
     proj_subfac = utils.get_proj_subfac(data_fetched)
@@ -113,7 +114,7 @@ def run_middleware(app) -> None:
 
     app.update_progress('Executing controller', 10)
 
-    controller = execute_controller([NETSUITE_URL], elements)
+    controller = execute_controller([NETSUITE_URL], elements, app.settings['delay'].get())
     proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
 
     controller.close()
