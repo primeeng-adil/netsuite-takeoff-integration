@@ -40,7 +40,7 @@ def open_new_window(app, title: str, width: int, height: int, rows: int, columns
     for cols in range(columns):
         window.columnconfigure(cols, weight=1, uniform='fred')
     for rows in range(rows):
-        window.rowconfigure(rows, weight=1)
+        window.rowconfigure(rows, minsize=30)
     window.title(title)
     window.iconbitmap(Path('./data/icon.ico'))
     position_right = int((app.winfo_screenwidth() - width) / 2)
@@ -171,6 +171,8 @@ def save(data_vars: dict, path: Path, start: int = 0, end: int = 0):
     :param start: index defining the start position of data objects
     :param end: index defining the end position of the data objects
     """
+    if not end:
+        end = len(data_vars)
     path.parent.mkdir(exist_ok=True, parents=True)
     filtered_vars = dict(itertools.islice(data_vars.items(), start, end))
     data = [[key, data_vars[key].get()] for key in filtered_vars]
