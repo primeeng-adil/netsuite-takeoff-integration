@@ -160,4 +160,4 @@ cython_debug/
 .idea/
 
 # User specific inputs for the program
-src/data/inputs
+/src/data/settings.csv
