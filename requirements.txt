@@ -6,3 +6,4 @@ selenium==4.7.2
 ttkwidgets==0.13.0
 openpyxl==3.1.2
 pywin32==306
+chromedriver_autoinstaller
