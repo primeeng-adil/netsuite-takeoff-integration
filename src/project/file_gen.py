@@ -1,7 +1,7 @@
 import datetime
 import os
 from openpyxl import load_workbook
-from src.utility.excel_handler import *
+from utility.excel_handler import *
 import win32com.client as client
 import pythoncom
 from pathlib import Path

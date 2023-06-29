@@ -1,9 +1,9 @@
 import chromedriver_autoinstaller
 import webbrowser
-import src.middleware.utils as utils
+import middleware.utils as utils
 from pywebgo.controller import WebController
-from src.utility.elem_handler import set_user_pass_questions
-from src.consts import CHROME_USER_PROFILE, NETSUITE_URL
+from utility.elem_handler import set_user_pass_questions
+from consts import CHROME_USER_PROFILE, NETSUITE_URL
 
 
 def execute_controller(url: list, elements: list, wait: float) -> WebController:
@@ -17,6 +17,7 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
     """
     options = [
         f'user-data-dir={CHROME_USER_PROFILE}',
+        '--profile-directory=Profile 2',
         'start-maximized'
     ]
     web_controller = WebController(url, options=options, wait=wait)

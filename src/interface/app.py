@@ -4,12 +4,12 @@ import PIL.Image
 from PIL import ImageTk
 from tkinter import *
 from tkinter.ttk import *
-import src.interface.utils as utils
 from pathlib import Path
 from threading import Thread, Event
-from src.utility import csv_handler
-from src.consts import DROPDOWN_PATHS
-from src.middleware.middleware import run_middleware
+from interface import utils
+from utility import csv_handler
+from consts import DROPDOWN_PATHS
+from middleware.middleware import run_middleware
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 

@@ -1,9 +1,9 @@
 import re
 from pathlib import Path
-from src.project import file_gen
+from project import file_gen
 from selenium.webdriver import Keys
-from src.utility import list_handler, elem_handler
-from src.consts import JOB_DIRS, TAKEOFF_PATH, CHECKLIST_PATH, CONFIG_PATH, QUOTE_LOG_PATH
+from utility import list_handler, elem_handler
+from consts import JOB_DIRS, TAKEOFF_PATH, CHECKLIST_PATH, CONFIG_PATH, QUOTE_LOG_PATH
 
 
 def make_project_dirs_files(proj_data: dict) -> None:
