@@ -3,8 +3,8 @@ from pathlib import Path
 from tkinter import END, W
 from tkinter import messagebox, filedialog, StringVar, Toplevel, Menu, Tk, Event
 from tkinter.ttk import Label, Entry
-from ttkwidgets.autocomplete import AutocompleteCombobox
 from utility import csv_handler
+from ttkwidgets.autocomplete import AutocompleteCombobox
 
 
 def adjust_window(app, title: str, width: int, height: int):
