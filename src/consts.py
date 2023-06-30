@@ -13,8 +13,8 @@ DROPDOWN_PATHS = None
 
 
 def get_consts_from_csv():
-    reader = csv.DictReader(open('./data/consts.csv', encoding='utf-8-sig'))
     result = {}
+    reader = csv.DictReader(open('./data/consts.csv', encoding='utf-8-sig'))
     for row in reader:
         result[row['VAR']] = row['VAL']
 
