@@ -1,5 +1,6 @@
 import ctypes
 import itertools
+import webbrowser
 import PIL.Image
 from PIL import ImageTk
 from tkinter import *
@@ -8,8 +9,9 @@ from pathlib import Path
 from threading import Thread, Event
 from interface import utils
 from utility import csv_handler
-from consts import DROPDOWN_PATHS
+from pywebgo.controller import WebController
 from middleware.middleware import run_middleware
+from consts import DROPDOWN_PATHS, CHROME_USER_PROFILE, NETSUITE_URL
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -120,13 +122,13 @@ class App(Tk):
             ['Exit', self.destroy]
         ]
         edit_cmd_funcs = [
-            ['Clear Inputs', self.clear_inputs],
-            ['Autofill Inputs', self.empty]
+            ['Open Browser', self.open_chromedriver],
+            ['Clear Inputs', self.clear_inputs]
         ]
         help_cmd_funcs = [
             ['User Guide', self.empty],
-            ['Source Code', self.empty],
-            ['Check for Updates...', self.empty],
+            ['GitHub Repo', self.open_github],
+            ['Check for Updates...', self.check_updates],
             ['About', self.empty]
         ]
 
@@ -233,7 +235,7 @@ class App(Tk):
         """
         templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']), header=True)
         types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']), header=True)
-        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['addresses']), column=1, header=True)
+        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['addresses']), header=True)
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
@@ -270,6 +272,8 @@ class App(Tk):
 
         tooltip = Label(self.tabs[2], text='(Not required)')
         tooltip.grid(row=3, column=0, sticky=E, padx=self.pad_x)
+        tooltip = Label(self.tabs[0], text='(Not required)')
+        tooltip.grid(row=5, column=0, sticky=E, padx=self.pad_x)
 
         bool_var = BooleanVar()
         bool_var.set(self.settings['config'].get())
@@ -510,6 +514,19 @@ class App(Tk):
         """
         utils.save(self.settings, Path('./data/settings.csv'))
         settings_window.destroy()
+
+    @staticmethod
+    def open_chromedriver():
+        options = [f'user-data-dir={CHROME_USER_PROFILE}', 'start-maximized']
+        controller = WebController([NETSUITE_URL], options=options, detach=True)
+
+    @staticmethod
+    def open_github():
+        webbrowser.open(r"https://github.com/primeeng-adil/netsuite-takeoff-integration")
+
+    @staticmethod
+    def check_updates():
+        webbrowser.open(r"https://github.com/primeeng-adil/netsuite-takeoff-integration/releases")
 
     def empty(self):
         pass
