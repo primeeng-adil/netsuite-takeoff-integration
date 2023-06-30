@@ -1,3 +1,4 @@
+import sys
 import ctypes
 import itertools
 import webbrowser
@@ -51,6 +52,11 @@ class App(Tk):
         self.default_csv_path = None
         self.settings_window = None
 
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+            self.data_path = Path(sys._MEIPASS, 'data')
+        else:
+            self.data_path = Path(__package__).resolve().parent / 'data'
+
         utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1", 850, 725)
 
         self.__add_icon()
@@ -90,7 +96,7 @@ class App(Tk):
         """
         Add the application icon.
         """
-        self.iconbitmap(Path('./data/icon.ico'))
+        self.iconbitmap(Path(self.data_path, 'icon.ico'))
 
     def __add_logo(self) -> PhotoImage:
         """
@@ -98,7 +104,7 @@ class App(Tk):
         :return: logo image
         """
         maxsize = (200, 200)
-        logo = PIL.Image.open(Path('./data/logo.png'))
+        logo = PIL.Image.open(Path(self.data_path, 'logo.png'))
         logo.thumbnail(maxsize)
         img = ImageTk.PhotoImage(logo)
         logo_panel = Label(self, image=img)
@@ -149,7 +155,7 @@ class App(Tk):
         """
         Load the application settings from a CSV file.
         """
-        utils.load(self.settings, Path('./data/settings.csv'))
+        utils.load(self.settings, Path(self.data_path, 'settings.csv'))
         self.default_csv_path = Path(self.settings['csv-path'].get())
         if not self.default_csv_path.is_dir() or self.default_csv_path:
             self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
@@ -512,7 +518,7 @@ class App(Tk):
 
         :param settings_window: window displaying settings
         """
-        utils.save(self.settings, Path('./data/settings.csv'))
+        utils.save(self.settings, Path(self.data_path, 'settings.csv'))
         settings_window.destroy()
 
     @staticmethod
