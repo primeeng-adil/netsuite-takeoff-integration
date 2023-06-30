@@ -1,4 +1,3 @@
-import sys
 import ctypes
 import consts
 import itertools
@@ -36,7 +35,7 @@ class App(Tk):
         default_csv_path (Path): The default path for CSV files.
     """
 
-    def __init__(self):
+    def __init__(self, app_path: Path):
         super().__init__()
         self.event = Event()
         self.pause = False
@@ -51,13 +50,9 @@ class App(Tk):
         self.pad_x = 40
         self.default_csv_path = None
         self.settings_window = None
+        self.data_path = app_path / 'data'
 
-        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-            self.data_path = Path(sys._MEIPASS, 'data')
-        else:
-            self.data_path = Path(__package__).resolve().parent / 'data'
-
-        utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1", 850, 725)
+        utils.adjust_window(self, "NetSuite Takeoff Integration", 850, 725)
 
         self.__add_icon()
         self.__add_menu()
