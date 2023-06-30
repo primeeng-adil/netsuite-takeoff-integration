@@ -42,7 +42,7 @@ def open_new_window(app, title: str, width: int, height: int, rows: int, columns
     for rows in range(rows):
         window.rowconfigure(rows, minsize=30)
     window.title(title)
-    window.iconbitmap(Path('./data/icon.ico'))
+    window.iconbitmap(Path(app.data_path, 'icon.ico'))
     position_right = int((app.winfo_screenwidth() - width) / 2)
     position_down = int((app.winfo_screenheight() - height) / 2 - height / 6)
     window.geometry("{}x{}+{}+{}".format(width, height, position_right, position_down))
