@@ -1,5 +1,6 @@
 import sys
 import ctypes
+import consts
 import itertools
 import webbrowser
 import PIL.Image
@@ -12,7 +13,6 @@ from interface import utils
 from utility import csv_handler
 from pywebgo.controller import WebController
 from middleware.middleware import run_middleware
-from consts import DROPDOWN_PATHS, CHROME_USER_PROFILE, NETSUITE_URL, GITHUB_SRC, GITHUB_RLS
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -215,11 +215,11 @@ class App(Tk):
         """
         Add the elements for the proposal tab.
         """
-        departments = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['departments']), header=True)
-        classes = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['classes']), header=True)
-        reps = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['reps']), header=True)
-        customers = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['customers']), header=True)
-        items = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['items']), header=True)
+        departments = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['departments']), header=True)
+        classes = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['classes']), header=True)
+        reps = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['reps']), header=True)
+        customers = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['customers']), header=True)
+        items = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['items']), header=True)
 
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         utils.add_heading(self, 'Proposal Info', 1, 0)
@@ -239,9 +239,9 @@ class App(Tk):
         """
         Add the elements for the project tab.
         """
-        templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']), header=True)
-        types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']), header=True)
-        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['addresses']), header=True)
+        templates = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['templates']), header=True)
+        types = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['types']), header=True)
+        addresses = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['addresses']), header=True)
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
@@ -489,9 +489,11 @@ class App(Tk):
 
         lb = Label(settings_window, text='Default Checkboxes:')
         lb.grid(row=6, column=0, sticky=NW, padx=self.pad_x)
-        cb = Checkbutton(settings_window, text='Configurator', variable=self.settings['config'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Configurator', variable=self.settings['config'],
+                         onvalue=True, offvalue=False)
         cb.grid(row=6, column=1, sticky=W)
-        cb = Checkbutton(settings_window, text='Quote Log', variable=self.settings['log'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Quote Log', variable=self.settings['log'],
+                         onvalue=True, offvalue=False)
         cb.grid(row=7, column=1, sticky=W)
 
         lb = Label(settings_window, text='Default Entries:')
@@ -523,16 +525,16 @@ class App(Tk):
 
     @staticmethod
     def open_chromedriver():
-        options = [f'user-data-dir={CHROME_USER_PROFILE}', 'start-maximized']
-        controller = WebController([NETSUITE_URL], options=options, detach=True)
+        options = [f'user-data-dir={consts.CHROME_USER_PROFILE}', 'start-maximized']
+        controller = WebController([consts.NETSUITE_URL], options=options, detach=True)
 
     @staticmethod
     def open_github():
-        webbrowser.open(GITHUB_SRC)
+        webbrowser.open(consts.GITHUB_SRC)
 
     @staticmethod
     def check_updates():
-        webbrowser.open(GITHUB_RLS)
+        webbrowser.open(consts.GITHUB_SRC)
 
     def empty(self):
         pass

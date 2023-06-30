@@ -1,9 +1,9 @@
-import chromedriver_autoinstaller
+import consts
 import webbrowser
+import chromedriver_autoinstaller
 import middleware.utils as utils
 from pywebgo.controller import WebController
 from utility.elem_handler import set_user_pass_questions
-from consts import CHROME_USER_PROFILE, NETSUITE_URL
 
 
 def execute_controller(url: list, elements: list, wait: float) -> WebController:
@@ -16,7 +16,7 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
     :return: instance of WebController
     """
     options = [
-        f'user-data-dir={CHROME_USER_PROFILE}',
+        f'user-data-dir={consts.CHROME_USER_PROFILE}',
         'start-maximized',
         'disable-infobars',
         '--disable-dev-shm-usage',
@@ -118,7 +118,7 @@ def run_middleware(app) -> None:
 
     app.update_progress('Executing controller', 10)
 
-    controller = execute_controller([NETSUITE_URL], elements, app.settings['delay'].get())
+    controller = execute_controller([consts.NETSUITE_URL], elements, app.settings['delay'].get())
     proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
 
     controller.close()
