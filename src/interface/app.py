@@ -12,7 +12,7 @@ from interface import utils
 from utility import csv_handler
 from pywebgo.controller import WebController
 from middleware.middleware import run_middleware
-from consts import DROPDOWN_PATHS, CHROME_USER_PROFILE, NETSUITE_URL
+from consts import DROPDOWN_PATHS, CHROME_USER_PROFILE, NETSUITE_URL, GITHUB_SRC, GITHUB_RLS
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -528,11 +528,11 @@ class App(Tk):
 
     @staticmethod
     def open_github():
-        webbrowser.open(r"https://github.com/primeeng-adil/netsuite-takeoff-integration")
+        webbrowser.open(GITHUB_SRC)
 
     @staticmethod
     def check_updates():
-        webbrowser.open(r"https://github.com/primeeng-adil/netsuite-takeoff-integration/releases")
+        webbrowser.open(GITHUB_RLS)
 
     def empty(self):
         pass

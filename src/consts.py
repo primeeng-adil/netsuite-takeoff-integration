@@ -6,6 +6,8 @@ CONFIG_PATH = r'B:\Prime Products\CATALOG\CONFIGURATOR_latest.xltm'
 QUOTE_LOG_PATH = r'D:\Quotes\Quote Log rev1.16.xlsm'
 DROPDOWN_DIR = r'A:/Templates/Take Off Templates/NetSuite data'
 JOB_DIRS = ['Correspondence', 'Info to B drive', 'Purchase Order', 'RFQ', 'Specifications', 'Submittal']
+GITHUB_SRC = r"https://github.com/primeeng-adil/netsuite-takeoff-integration"
+GITHUB_RLS = r"https://github.com/primeeng-adil/netsuite-takeoff-integration/releases"
 
 DROPDOWN_PATHS = {
     'addresses': f'{DROPDOWN_DIR}/NetSuite_Daily_SiteAddress_List.csv',
