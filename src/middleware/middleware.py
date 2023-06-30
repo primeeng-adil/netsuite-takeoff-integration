@@ -17,8 +17,11 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
     """
     options = [
         f'user-data-dir={CHROME_USER_PROFILE}',
-        '--profile-directory=Profile 2',
-        'start-maximized'
+        'start-maximized',
+        'disable-infobars',
+        '--disable-dev-shm-usage',
+        '--no-sandbox',
+        '--disable-extensions'
     ]
     web_controller = WebController(url, options=options, wait=wait)
     web_controller.run_controller(elements)
