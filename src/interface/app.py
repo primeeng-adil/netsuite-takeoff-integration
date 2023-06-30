@@ -1,15 +1,17 @@
 import ctypes
+import consts
 import itertools
+import webbrowser
 import PIL.Image
 from PIL import ImageTk
 from tkinter import *
 from tkinter.ttk import *
-import src.interface.utils as utils
 from pathlib import Path
 from threading import Thread, Event
-from src.utility import csv_handler
-from src.consts import DROPDOWN_PATHS
-from src.middleware.middleware import run_middleware
+from interface import utils
+from utility import csv_handler
+from pywebgo.controller import WebController
+from middleware.middleware import run_middleware
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -33,7 +35,7 @@ class App(Tk):
         default_csv_path (Path): The default path for CSV files.
     """
 
-    def __init__(self):
+    def __init__(self, app_path: Path):
         super().__init__()
         self.event = Event()
         self.pause = False
@@ -48,8 +50,9 @@ class App(Tk):
         self.pad_x = 40
         self.default_csv_path = None
         self.settings_window = None
+        self.data_path = app_path / 'data'
 
-        utils.adjust_window(self, "NetSuite Takeoff Integration - v1.0.1", 850, 725)
+        utils.adjust_window(self, "NetSuite Takeoff Integration", 850, 725)
 
         self.__add_icon()
         self.__add_menu()
@@ -88,7 +91,7 @@ class App(Tk):
         """
         Add the application icon.
         """
-        self.iconbitmap(Path('./data/icon.ico'))
+        self.iconbitmap(Path(self.data_path, 'icon.ico'))
 
     def __add_logo(self) -> PhotoImage:
         """
@@ -96,7 +99,7 @@ class App(Tk):
         :return: logo image
         """
         maxsize = (200, 200)
-        logo = PIL.Image.open(Path('./data/logo.png'))
+        logo = PIL.Image.open(Path(self.data_path, 'logo.png'))
         logo.thumbnail(maxsize)
         img = ImageTk.PhotoImage(logo)
         logo_panel = Label(self, image=img)
@@ -120,13 +123,13 @@ class App(Tk):
             ['Exit', self.destroy]
         ]
         edit_cmd_funcs = [
-            ['Clear Inputs', self.clear_inputs],
-            ['Autofill Inputs', self.empty]
+            ['Open Browser', self.open_chromedriver],
+            ['Clear Inputs', self.clear_inputs]
         ]
         help_cmd_funcs = [
             ['User Guide', self.empty],
-            ['Source Code', self.empty],
-            ['Check for Updates...', self.empty],
+            ['GitHub Repo', self.open_github],
+            ['Check for Updates...', self.check_updates],
             ['About', self.empty]
         ]
 
@@ -147,7 +150,7 @@ class App(Tk):
         """
         Load the application settings from a CSV file.
         """
-        utils.load(self.settings, Path('./data/settings.csv'))
+        utils.load(self.settings, Path(self.data_path, 'settings.csv'))
         self.default_csv_path = Path(self.settings['csv-path'].get())
         if not self.default_csv_path.is_dir() or self.default_csv_path:
             self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
@@ -207,11 +210,11 @@ class App(Tk):
         """
         Add the elements for the proposal tab.
         """
-        departments = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['departments']), header=True)
-        classes = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['classes']), header=True)
-        reps = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['reps']), header=True)
-        customers = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['customers']), header=True)
-        items = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['items']), header=True)
+        departments = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['departments']), header=True)
+        classes = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['classes']), header=True)
+        reps = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['reps']), header=True)
+        customers = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['customers']), header=True)
+        items = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['items']), header=True)
 
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         utils.add_heading(self, 'Proposal Info', 1, 0)
@@ -231,9 +234,9 @@ class App(Tk):
         """
         Add the elements for the project tab.
         """
-        templates = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['templates']), header=True)
-        types = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['types']), header=True)
-        addresses = csv_handler.read_csv_column(Path(DROPDOWN_PATHS['addresses']), column=1, header=True)
+        templates = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['templates']), header=True)
+        types = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['types']), header=True)
+        addresses = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['addresses']), header=True)
         billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
@@ -270,6 +273,8 @@ class App(Tk):
 
         tooltip = Label(self.tabs[2], text='(Not required)')
         tooltip.grid(row=3, column=0, sticky=E, padx=self.pad_x)
+        tooltip = Label(self.tabs[0], text='(Not required)')
+        tooltip.grid(row=5, column=0, sticky=E, padx=self.pad_x)
 
         bool_var = BooleanVar()
         bool_var.set(self.settings['config'].get())
@@ -479,9 +484,11 @@ class App(Tk):
 
         lb = Label(settings_window, text='Default Checkboxes:')
         lb.grid(row=6, column=0, sticky=NW, padx=self.pad_x)
-        cb = Checkbutton(settings_window, text='Configurator', variable=self.settings['config'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Configurator', variable=self.settings['config'],
+                         onvalue=True, offvalue=False)
         cb.grid(row=6, column=1, sticky=W)
-        cb = Checkbutton(settings_window, text='Quote Log', variable=self.settings['log'], onvalue=True, offvalue=False)
+        cb = Checkbutton(settings_window, text='Quote Log', variable=self.settings['log'],
+                         onvalue=True, offvalue=False)
         cb.grid(row=7, column=1, sticky=W)
 
         lb = Label(settings_window, text='Default Entries:')
@@ -508,8 +515,21 @@ class App(Tk):
 
         :param settings_window: window displaying settings
         """
-        utils.save(self.settings, Path('./data/settings.csv'))
+        utils.save(self.settings, Path(self.data_path, 'settings.csv'))
         settings_window.destroy()
+
+    @staticmethod
+    def open_chromedriver():
+        options = [f'user-data-dir={consts.CHROME_USER_PROFILE}', 'start-maximized']
+        controller = WebController([consts.NETSUITE_URL], options=options, detach=True)
+
+    @staticmethod
+    def open_github():
+        webbrowser.open(consts.GITHUB_SRC)
+
+    @staticmethod
+    def check_updates():
+        webbrowser.open(consts.GITHUB_SRC)
 
     def empty(self):
         pass

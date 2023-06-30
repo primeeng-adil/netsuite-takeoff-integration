@@ -1,9 +1,9 @@
 import re
+import consts
 from pathlib import Path
-from src.project import file_gen
+from project import file_gen
 from selenium.webdriver import Keys
-from src.utility import list_handler, elem_handler
-from src.consts import JOB_DIRS, TAKEOFF_PATH, CHECKLIST_PATH, CONFIG_PATH, QUOTE_LOG_PATH
+from utility import list_handler, elem_handler
 
 
 def make_project_dirs_files(proj_data: dict) -> None:
@@ -22,7 +22,7 @@ def make_project_dirs_files(proj_data: dict) -> None:
     else:
         job_dir = Path(proj_dir, f"{proj_data['id']}_{proj_data['type']}")
 
-    for subdir in JOB_DIRS:
+    for subdir in consts.JOB_DIRS:
         Path(job_dir, subdir).mkdir(parents=True, exist_ok=True)
 
     excel_ext = ".xltm"
@@ -31,13 +31,13 @@ def make_project_dirs_files(proj_data: dict) -> None:
     config_name = f"{proj_data['id']}_CONFIGURATOR_1.0.0{excel_ext}"
 
     takeoff_path = Path(job_dir, takeoff_name)
-    checklist_path = Path(job_dir, JOB_DIRS[1], checklist_name)
+    checklist_path = Path(job_dir, consts.JOB_DIRS[1], checklist_name)
     config_path = Path(job_dir, config_name)
 
-    file_gen.create_takeoff_file(TAKEOFF_PATH, takeoff_path, proj_data)
-    file_gen.create_checklist_file(CHECKLIST_PATH, checklist_path, proj_data)
+    file_gen.create_takeoff_file(consts.TAKEOFF_PATH, takeoff_path, proj_data)
+    file_gen.create_checklist_file(consts.CHECKLIST_PATH, checklist_path, proj_data)
     if proj_data['config']:
-        file_gen.create_config_file(CONFIG_PATH, config_path, proj_data)
+        file_gen.create_config_file(consts.CONFIG_PATH, config_path, proj_data)
 
 
 def update_quote_log(proj_data):
@@ -46,7 +46,7 @@ def update_quote_log(proj_data):
 
     :param proj_data: data for the project
     """
-    file_gen.update_quote_log(QUOTE_LOG_PATH, proj_data)
+    file_gen.update_quote_log(consts.QUOTE_LOG_PATH, proj_data)
 
 
 def update_keys_for_elements(data_keys: dict):
