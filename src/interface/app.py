@@ -7,7 +7,7 @@ from PIL import ImageTk
 from tkinter import *
 from tkinter.ttk import *
 from pathlib import Path
-from threading import Thread, Event
+from threading import Thread
 from interface import utils
 from utility import csv_handler
 from pywebgo.controller import WebController
@@ -37,8 +37,6 @@ class App(Tk):
 
     def __init__(self, app_path: Path):
         super().__init__()
-        self.event = Event()
-        self.pause = False
         self.pb_status = None
         self.pb = None
         self.pb_window = None
@@ -321,10 +319,6 @@ class App(Tk):
 
         pb_button = Button(self.pb_window, text="End", command=self.pb_window.destroy)
         pb_button.grid(row=5, column=0, columnspan=3, sticky=W, padx=20, ipadx=5)
-        pb_button = Button(self.pb_window, text="Pause", command=self.pause_execution)
-        pb_button.grid(row=5, column=0, columnspan=3, sticky=W, padx=(135, 0), ipadx=5)
-        pb_button = Button(self.pb_window, text="Resume", command=self.resume_execution)
-        pb_button.grid(row=5, column=0, columnspan=3, sticky=W, padx=(250, 0), ipadx=5)
 
     def stop_progress(self):
         """
@@ -533,9 +527,3 @@ class App(Tk):
 
     def empty(self):
         pass
-
-    def pause_execution(self):
-        self.pause = True
-
-    def resume_execution(self):
-        self.pause = False
