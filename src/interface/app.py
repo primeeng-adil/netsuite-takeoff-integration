@@ -50,7 +50,7 @@ class App(Tk):
         self.settings_window = None
         self.data_path = app_path / 'data'
 
-        utils.adjust_window(self, "NetSuite Takeoff Integration", 850, 725)
+        utils.adjust_window(self, "NetSuite Takeoff Integrator", 850, 725)
 
         self.__add_icon()
         self.__add_menu()
