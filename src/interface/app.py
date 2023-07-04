@@ -514,7 +514,8 @@ class App(Tk):
 
     @staticmethod
     def open_chromedriver():
-        options = [f'user-data-dir={consts.CHROME_USER_PROFILE}', 'start-maximized']
+        chrome_profile_path = str(Path.home() / Path(consts.CHROME_USER_PROFILE))
+        options = [f'user-data-dir={chrome_profile_path}', 'start-maximized']
         controller = WebController([consts.NETSUITE_URL], options=options, detach=True)
 
     @staticmethod
