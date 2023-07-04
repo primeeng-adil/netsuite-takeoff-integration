@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver import Keys
 from pywebgo import utils
 
@@ -68,6 +70,7 @@ def check_for_auto_populate(*argv):
     controller, element = argv[0], argv[1]
     web_element = controller.get_element(element, timeout=5)
     web_element.click()
+    time.sleep(1)
     if web_element.get_attribute('value') != '':
         if web_element.get_attribute('id') == 'password':
             web_element.send_keys(Keys.ENTER)
