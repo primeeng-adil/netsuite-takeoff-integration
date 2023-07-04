@@ -26,7 +26,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='NetSuite Takeoff Integration',
+    name='NetSuite Takeoff Integrator',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
