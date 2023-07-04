@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import consts
 import webbrowser
 import chromedriver_autoinstaller
@@ -15,8 +17,9 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
     :param wait: delay (in seconds) before executing each action
     :return: instance of WebController
     """
+    chrome_profile_path = str(Path.home() / Path(consts.CHROME_USER_PROFILE))
     options = [
-        f'user-data-dir={consts.CHROME_USER_PROFILE}',
+        f'user-data-dir={chrome_profile_path}',
         'start-maximized',
         'disable-infobars',
         '--disable-dev-shm-usage',
