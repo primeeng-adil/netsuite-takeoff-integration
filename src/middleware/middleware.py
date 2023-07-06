@@ -25,7 +25,7 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
         '--no-sandbox',
         '--disable-extensions'
     ]
-    web_controller = WebController(url, 10, options=options, wait=wait)
+    web_controller = WebController(url, timeout=10, options=options, wait=wait)
     web_controller.run_controller(elements)
     return web_controller
 
