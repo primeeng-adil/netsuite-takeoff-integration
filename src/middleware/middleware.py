@@ -112,13 +112,10 @@ def run_middleware(app) -> None:
     set_user_pass_questions(data)
     proj_options = get_proj_options(data)
 
-    app.update_progress('Installing Chrome Driver', 5)
-    chromedriver_autoinstaller.install()
-
     app.update_progress('Creating controller elements', 5)
     elements = utils.generate_elements_with_keys(data)
 
-    app.update_progress('Executing controller', 10)
+    app.update_progress('Executing controller', 15)
 
     controller = execute_controller([consts.NETSUITE_URL], elements, app.settings['delay'].get())
     proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
