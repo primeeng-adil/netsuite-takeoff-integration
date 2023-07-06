@@ -516,7 +516,7 @@ class App(Tk):
     def open_chromedriver():
         chrome_profile_path = str(Path.home() / Path(consts.CHROME_USER_PROFILE))
         options = [f'user-data-dir={chrome_profile_path}', 'start-maximized']
-        controller = WebController([consts.NETSUITE_URL], options=options, detach=True)
+        controller = WebController([consts.NETSUITE_URL], 10, options=options, detach=True)
 
     @staticmethod
     def open_github():
