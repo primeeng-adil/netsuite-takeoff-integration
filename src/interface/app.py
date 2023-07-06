@@ -10,7 +10,6 @@ from pathlib import Path
 from threading import Thread
 from interface import utils
 from utility import csv_handler
-import chromedriver_autoinstaller
 from pywebgo.controller import WebController
 from middleware.middleware import run_middleware
 
