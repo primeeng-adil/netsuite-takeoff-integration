@@ -1,5 +1,4 @@
 import time
-
 from selenium.webdriver import Keys
 from pywebgo import utils
 

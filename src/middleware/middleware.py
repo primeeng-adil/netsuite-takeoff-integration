@@ -1,7 +1,6 @@
-from pathlib import Path
-
 import consts
 import webbrowser
+from pathlib import Path
 import chromedriver_autoinstaller
 import middleware.utils as utils
 from pywebgo.controller import WebController
