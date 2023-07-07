@@ -68,7 +68,7 @@ def check_for_auto_populate(*argv):
     :param argv: controller, element
     """
     controller, element = argv[0], argv[1]
-    web_element = controller.get_element(element, retry=3, timeout=0.5)
+    web_element = controller.get_element(element, retry=2, timeout=0.5)
     if web_element.get_attribute('id') == 'email':
         time.sleep(0.5)
     web_element.click()
