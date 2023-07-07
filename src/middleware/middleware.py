@@ -1,7 +1,6 @@
 import consts
 import webbrowser
 from pathlib import Path
-import chromedriver_autoinstaller
 import middleware.utils as utils
 from pywebgo.controller import WebController
 from utility.elem_handler import set_user_pass_questions
