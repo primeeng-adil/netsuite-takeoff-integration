@@ -68,7 +68,7 @@ def check_for_auto_populate(*argv):
     :param argv: controller, element
     """
     controller, element = argv[0], argv[1]
-    web_element = controller.get_element(element, retry=0, timeout=10)
+    web_element = controller.get_element(element, retry=3, timeout=0.5)
     if web_element.get_attribute('id') == 'email':
         time.sleep(0.5)
     web_element.click()
@@ -105,26 +105,26 @@ def get_elements() -> list:
         {'loc': 'id', 'value': 'password', 'custom': check_for_auto_populate},
         {'loc': 'css', 'value': r'tbody tbody tr td.smalltextnolink.text-opensans', 'custom': validate_func},
         {'loc': 'name', 'value': 'answer', 'action': 'send-keys'},
-        {'loc': 'name', 'value': 'custrecord_appfcust_display', 'action': 'send-keys', 'keys': 'Customer'},
-        {'loc': 'name', 'value': 'inpt_custrecord_appfproposalstatus', 'action': 'send-keys', 'keys': 'Status'},
-        {'loc': 'name', 'value': 'custrecord_proposalmemo', 'action': 'send-keys', 'keys': 'Memo'},
-        {'loc': 'name', 'value': 'inpt_custrecord_proposalsales', 'action': 'send-keys', 'keys': 'Proposal Sales Rep'},
-        {'loc': 'name', 'value': 'inpt_custrecord_proposaldepartment', 'action': 'send-keys click',
-         'keys': 'Department'},
-        {'loc': 'name', 'value': 'inpt_custrecord_proposalclass', 'action': 'send-keys click', 'keys': 'Class'},
-        {'loc': 'id', 'value': 'recmachcustrecord_proposallink_custrecord_proposalitem_display',
-         'action': 'send-keys', 'keys': 'Item'},
-        {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
-         'custom': popup_handler},
-        {'loc': 'css', 'value': 'td[data-ns-tooltip="MILESTONE NAME"]', 'action': 'click'},
-        {'loc': 'name', 'value': 'custrecord_proposalmilestone', 'action': 'send-keys', 'keys': 'Milestone'},
-        {'loc': 'css', 'value': 'td[data-ns-tooltip="QUANTITY"]', 'action': 'click'},
-        {'loc': 'name', 'value': 'custrecord_proposalquantity_formattedValue', 'action': 'send-keys',
-         'keys': 'Quantity'},
+        # {'loc': 'name', 'value': 'custrecord_appfcust_display', 'action': 'send-keys', 'keys': 'Customer'},
+        # {'loc': 'name', 'value': 'inpt_custrecord_appfproposalstatus', 'action': 'send-keys', 'keys': 'Status'},
+        # {'loc': 'name', 'value': 'custrecord_proposalmemo', 'action': 'send-keys', 'keys': 'Memo'},
+        # {'loc': 'name', 'value': 'inpt_custrecord_proposalsales', 'action': 'send-keys', 'keys': 'Proposal Sales Rep'},
+        # {'loc': 'name', 'value': 'inpt_custrecord_proposaldepartment', 'action': 'send-keys click',
+        #  'keys': 'Department'},
+        # {'loc': 'name', 'value': 'inpt_custrecord_proposalclass', 'action': 'send-keys click', 'keys': 'Class'},
+        # {'loc': 'id', 'value': 'recmachcustrecord_proposallink_custrecord_proposalitem_display',
+        #  'action': 'send-keys', 'keys': 'Item'},
+        # {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
+        #  'custom': popup_handler},
+        # {'loc': 'css', 'value': 'td[data-ns-tooltip="MILESTONE NAME"]', 'action': 'click'},
+        # {'loc': 'name', 'value': 'custrecord_proposalmilestone', 'action': 'send-keys', 'keys': 'Milestone'},
+        # {'loc': 'css', 'value': 'td[data-ns-tooltip="QUANTITY"]', 'action': 'click'},
+        # {'loc': 'name', 'value': 'custrecord_proposalquantity_formattedValue', 'action': 'send-keys',
+        #  'keys': 'Quantity'},
         {'loc': 'id', 'value': 'custrecord_appfproj_display', 'action': 'hover'},
         {'loc': 'id', 'value': 'custrecord_appfproj_popup_new', 'action': 'click'},
         {'loc': 'name', 'value': 'parent_display', 'action': 'send-keys', 'keys': 'Customer', 'window': 1},
-        {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
+        {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click hover',
          'custom': popup_handler, 'window': 1},
         {'loc': 'name', 'value': 'inpt_custentityprime_choose_template', 'action': 'send-keys click',
          'keys': 'Choose', 'window': 1},
