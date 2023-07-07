@@ -103,7 +103,7 @@ def save_as_xlsm(src: Path, dest: Path):
     app, command = 'Excel.Application', pythoncom.CoInitialize
     excel = client.gencache.EnsureDispatch(app, command())
     excel.DisplayAlerts = False
-    wb = excel.Workbooks.Open(str(src))
+    wb = excel.Workbooks.Open(str(src), UpdateLinks=False)
     filename = str(dest.parent / (dest.stem + '.xlsm'))
     wb.SaveAs(Filename=filename, FileFormat=52, CreateBackup=False)
     wb.Close()
