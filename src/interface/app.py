@@ -37,9 +37,11 @@ class App(Tk):
 
     def __init__(self, app_path: Path):
         super().__init__()
+        self.controller = None
         self.pb_status = None
         self.pb = None
         self.pb_window = None
+        self.log = None
         self.tabs = []
         self.tab_grid = []
         self.data_vars = {}
@@ -306,7 +308,7 @@ class App(Tk):
         Start the progress bar and status window.
         """
         self.pb_status = StringVar()
-        self.pb_window = utils.open_new_window(self, "Progress", 400, 300, 6, 3)
+        self.pb_window = utils.open_new_window(self, "Progress", 450, 300, 6, 3)
         self.pb = Progressbar(self.pb_window, orient=HORIZONTAL, mode='determinate')
         self.pb.grid(row=2, column=0, columnspan=3, sticky=EW, padx=20)
 
@@ -314,11 +316,11 @@ class App(Tk):
         status_label = Label(self.pb_window, textvariable=self.pb_status)
         status_label.grid(row=1, column=0, columnspan=3, sticky=W, padx=20)
 
-        log = Listbox(self.pb_window, height=6, fg='orange')
-        log.grid(column=0, columnspan=3, sticky=EW, padx=20)
+        self.log = Text(self.pb_window, height=6, fg='red', wrap=WORD)
+        self.log.grid(row=3, column=0, columnspan=3, sticky=EW, padx=20, pady=(10, 20))
 
-        pb_button = Button(self.pb_window, text="End", command=self.pb_window.destroy)
-        pb_button.grid(row=5, column=0, columnspan=3, sticky=W, padx=20, ipadx=5)
+        pb_button = Button(self.pb_window, text="End", command=self.stop_progress)
+        pb_button.grid(row=4, column=0, columnspan=3, sticky=W, padx=20, ipadx=5)
 
     def stop_progress(self):
         """
@@ -327,6 +329,10 @@ class App(Tk):
         self.pb.grid_forget()
         self.pb.destroy()
         self.pb_window.destroy()
+        self.pb_window = None
+        if self.controller:
+            self.controller.quit()
+            del self.controller
 
     def update_progress(self, status: str, inc: float):
         """
