@@ -22,6 +22,7 @@ def make_project_dirs_files(proj_data: dict) -> None:
     else:
         job_dir = Path(proj_dir, f"{proj_data['id']}_{proj_data['type']}")
 
+    proj_data['job-path'] = str(Path(job_dir))
     for subdir in consts.JOB_DIRS:
         Path(job_dir, subdir).mkdir(parents=True, exist_ok=True)
 
