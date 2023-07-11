@@ -12,7 +12,6 @@ def get_controller(url: list, wait: float) -> WebController:
     Execute WebController processes.
 
     :param url: URL of the landing page
-    :param elements: elements for the WebController to process
     :param wait: delay (in seconds) before executing each action
     :return: instance of WebController
     """
