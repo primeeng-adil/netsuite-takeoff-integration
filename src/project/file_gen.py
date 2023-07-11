@@ -1,6 +1,8 @@
 import os
 import datetime
+import win32wnet
 import pythoncom
+import pywintypes
 from pathlib import Path
 from openpyxl import load_workbook
 from utility.excel_handler import *
@@ -79,12 +81,18 @@ def update_quote_log(path, proj_data):
     ql_ws = ql_wb.worksheets[0]
     last_row = get_last_empty_row(ql_ws, 'B')
 
-    today_date = datetime.datetime.today().strftime('%d-%b-%y')
+    today_date = datetime.datetime.today().date()
+    network_path = proj_data['job-path']
+    try:
+        network_path = win32wnet.WNetGetUniversalName(proj_data['job-path'], 1)
+    except pywintypes.error:
+        pass
+
     row_data = [
         today_date,
         proj_data['client'],
-        proj_data['path'],
-        proj_data['item'],
+        network_path,
+        proj_data['scope'],
         proj_data['id'],
         'TBD',
         proj_data['rep']
