@@ -1,4 +1,5 @@
 import consts
+import tkinter
 import webbrowser
 from pathlib import Path
 import middleware.utils as utils
@@ -6,7 +7,7 @@ from pywebgo.controller import WebController
 from utility.elem_handler import set_user_pass_questions
 
 
-def execute_controller(url: list, elements: list, wait: float) -> WebController:
+def get_controller(url: list, wait: float) -> WebController:
     """
     Execute WebController processes.
 
@@ -25,7 +26,6 @@ def execute_controller(url: list, elements: list, wait: float) -> WebController:
         '--disable-extensions'
     ]
     web_controller = WebController(url, timeout=10, options=options, wait=wait)
-    web_controller.run_controller(elements)
     return web_controller
 
 
@@ -70,7 +70,7 @@ def get_proj_options(data: dict) -> dict:
     :param data: keys entered by the user in the app interface
     :return: user specified options
     """
-    proj_path = data.pop('Project Path')
+    proj_path = str(Path(data.pop('Project Path')))
     has_config = data.pop('Configurator')
     is_logged = data.pop('Quote Log')
 
@@ -114,19 +114,26 @@ def run_middleware(app) -> None:
     app.update_progress('Creating controller elements', 5)
     elements = utils.generate_elements_with_keys(data)
 
-    app.update_progress('Executing controller', 15)
+    try:
+        app.update_progress('Executing controller', 15)
+        app.controller = get_controller([consts.NETSUITE_URL], app.settings['delay'].get())
+        app.controller.run_controller(elements)
+        data_scraped = app.controller.data_handler.database
+        proj_data = get_proj_data(data_scraped, data, proj_options)
+        app.controller.close()
+        webbrowser.open(proj_data['url'])
+        app.update_progress('Creating project files and directories', 50)
+        execute_dirs_files_maker(proj_data)
+        app.update_progress('Updating the quote log', 10)
+        update_quote_log(proj_data)
 
-    controller = execute_controller([consts.NETSUITE_URL], elements, app.settings['delay'].get())
-    proj_data = get_proj_data(controller.data_handler.database, data, proj_options)
-
-    controller.close()
-    webbrowser.open(proj_data['url'])
-
-    app.update_progress('Creating project files and directories', 40)
-    execute_dirs_files_maker(proj_data)
-
-    app.update_progress('Updating the quote log', 20)
-    update_quote_log(proj_data)
+    except Exception as ex:
+        if app.pb_window:
+            app.update_progress('Error occurred', 10)
+            app.log.insert(tkinter.END, str(ex))
+        if app.controller:
+            app.controller.quit()
+        return
 
     app.update_progress('Finishing', 20)
     app.stop_progress()
