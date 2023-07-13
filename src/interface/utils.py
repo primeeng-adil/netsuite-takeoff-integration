@@ -1,8 +1,8 @@
 import itertools
 from pathlib import Path
-from tkinter import END, W
-from tkinter import messagebox, filedialog, StringVar, Toplevel, Menu, Tk, Event
-from tkinter.ttk import Label, Entry
+from tkinter import END, W, NW
+from tkinter import messagebox, filedialog, StringVar, BooleanVar, Toplevel, Menu, Tk, Event
+from tkinter.ttk import Label, Entry, Checkbutton
 from utility import csv_handler
 from ttkwidgets.autocomplete import AutocompleteCombobox
 
@@ -90,6 +90,9 @@ def add_fields(app, labels: list, tab: int, row: int, col: int):
     """
     for i in range(0, 2 * len(labels), 2):
         field = int(i / 2)
+        if labels[field][0] == 'checkbox':
+            add_checkbox(app, tab, row + i + 1, col, labels[field][1])
+            continue
         label = Label(app.tabs[tab], text=labels[field][1])
         label.grid(row=row + i, column=col, sticky=W, padx=app.pad_x)
         if labels[field][0] == 'combo':
@@ -135,6 +138,24 @@ def add_dropdown(app, tab: int, row: int, col: int, label: str, options: list):
     dropdown.bind('<FocusOut>', reset_widget)
     app.data_vars.update({label: str_var})
     app.elements.append(dropdown)
+
+
+def add_checkbox(app, tab: int, row: int, col: int, label: str):
+    """
+    Add a tkinter checkbox object in the given tab.
+
+    :param label:
+    :param app: current app object interacting with the user
+    :param tab: index of the tab required
+    :param row: index of the row where the entry is to be added
+    :param col: index of the column where the entry is to be added
+    """
+
+    bool_var = BooleanVar()
+    checkbox = Checkbutton(app.tabs[tab], text=label, variable=bool_var, onvalue=True, offvalue=False)
+    checkbox.grid(row=row, column=col, sticky=NW, padx=app.pad_x)
+    app.data_vars.update({label: bool_var})
+    app.elements.append(checkbox)
 
 
 def bind_events_to_entry(entry: Entry):

@@ -194,6 +194,9 @@ class App(Tk):
             ['entry', 'Username:'],
             ['entry', 'Password:']
         ], 0, 1, 0)
+        utils.add_fields(self, [
+            ['checkbox', 'Executive']
+        ], 0, 3, 1)
         utils.add_heading(self, 'Security Questions', 0, 5)
         utils.add_fields(self, [
             ['entry', 'Question 1:'],
@@ -237,7 +240,6 @@ class App(Tk):
         templates = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['templates']), header=True)
         types = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['types']), header=True)
         addresses = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['addresses']), header=True)
-        billing = ['Charge-Based', 'Fixed Bid, Interval', 'Fixed Bid, Milestone', 'Time and Materials']
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
             ['combo', 'Site Address:', addresses],
@@ -247,7 +249,7 @@ class App(Tk):
         utils.add_fields(self, [
             ['combo', 'Project Template:', templates],
             ['combo', 'Project Type:', types],
-            ['combo', 'Billing Type:', billing]
+            ['checkbox', 'Configurator']
         ], 2, 1, 1)
 
     def __add_cmd_buttons(self):
@@ -264,7 +266,7 @@ class App(Tk):
         Customize the appearance and behavior of certain elements.
         """
         self.elements[1].config(show="*")
-        for i in range(5, 8):
+        for i in range(6, 9):
             self.elements[i].config(show="*")
 
         self.data_vars['Status'].set(self.settings['status'].get())
@@ -276,17 +278,10 @@ class App(Tk):
         tooltip = Label(self.tabs[0], text='(Not required)')
         tooltip.grid(row=5, column=0, sticky=E, padx=self.pad_x)
 
-        bool_var = BooleanVar()
-        bool_var.set(self.settings['config'].get())
-        cb = Checkbutton(self.tabs[2], text='Configurator', variable=bool_var, onvalue=True, offvalue=False)
-        cb.grid(row=7, column=1, sticky=W, padx=self.pad_x)
-        self.data_vars.update({'Configurator': bool_var})
+        utils.add_checkbox(self, 2, 7, 1, 'Quote Log')
 
-        bool_var = BooleanVar()
-        bool_var.set(self.settings['log'].get())
-        cb = Checkbutton(self.tabs[2], text='Quote Log', variable=bool_var, onvalue=True, offvalue=False)
-        cb.grid(row=8, column=1, sticky=NW, padx=self.pad_x)
-        self.data_vars.update({'Quote Log': bool_var})
+        self.data_vars['Quote Log'].set(self.settings['log'].get())
+        self.data_vars['Configurator'].set(self.settings['config'].get())
 
     def __error_handler(self) -> bool:
         """
@@ -348,13 +343,13 @@ class App(Tk):
         """
         Save the login information to the default CSV file.
         """
-        utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=8)
+        utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=9)
 
     def save_login_as(self):
         """
         Save the login information to a new CSV file.
         """
-        utils.save_as(self.data_vars, 'login_data.csv', end=8)
+        utils.save_as(self.data_vars, 'login_data.csv', end=9)
 
     def load_login(self):
         """
@@ -376,13 +371,13 @@ class App(Tk):
         """
         Save the input data to the default CSV file.
         """
-        utils.save(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=8, end=len(self.data_vars))
+        utils.save(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=9, end=len(self.data_vars))
 
     def save_inputs_as(self):
         """
         Save the input data to a new CSV file.
         """
-        utils.save_as(self.data_vars, 'input_data.csv', start=8, end=len(self.data_vars))
+        utils.save_as(self.data_vars, 'input_data.csv', start=9, end=len(self.data_vars))
 
     def load_inputs(self):
         """
