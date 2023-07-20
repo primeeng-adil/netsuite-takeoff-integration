@@ -289,7 +289,7 @@ class App(Tk):
         :return: flag indicating error
         """
         req_vars = dict(itertools.islice(self.data_vars.items(), 2))
-        req_vars.update(dict(itertools.islice(self.data_vars.items(), 8, len(self.data_vars) - 2)))
+        req_vars.update(dict(itertools.islice(self.data_vars.items(), 9, len(self.data_vars) - 2)))
         req_vars.pop('Project Scope')
         for key in req_vars:
             req_var = req_vars[key]
