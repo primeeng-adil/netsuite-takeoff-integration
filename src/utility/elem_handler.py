@@ -140,7 +140,7 @@ def get_elements() -> list:
          'keys': 'Project Template', 'window': 1},
         {'loc': 'name', 'value': 'custentityprime_project_scope', 'action': 'send-keys',
          'keys': 'Project Scope', 'window': 1},
-        {'loc': 'id', 'value': proj_type_name, 'action': 'send-keys',
+        {'loc': 'name', 'value': proj_type_name, 'action': 'send-keys',
          'keys': 'Project Type', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'window': 1},
