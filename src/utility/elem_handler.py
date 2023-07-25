@@ -144,7 +144,7 @@ def get_elements() -> list:
          'keys': 'Project Type', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'window': 1},
-        {'loc': 'name', 'value': 'custentityprime_project_site_address_display', 'action': 'send-keys',
+        {'loc': 'name', 'value': 'custentityprime_project_site_name_display', 'action': 'send-keys',
          'keys': 'Name', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'window': 1},
