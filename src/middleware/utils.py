@@ -90,16 +90,16 @@ def get_proj_id(data: list) -> str:
             return proj_id.group()
 
 
-def get_proj_subfac(data: list) -> str:
+def get_proj_subfac(data: dict) -> str:
     """
     Find and return the subfacility of the current project.
 
     :param data: data scraped by the controller during runtime
     :return: subfacility name of the project
     """
-    proj_subfac = next((item for item in data if item['type'] == 'attr[value]'), None)
-    if proj_subfac:
-        return proj_subfac['data-keys']
+    proj_title_words = [word.strip() for word in data['Name'].split('|')]
+    if len(proj_title_words) == 3:
+        return proj_title_words[2]
 
 
 def get_proj_url(data: list) -> str:

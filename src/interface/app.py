@@ -242,7 +242,7 @@ class App(Tk):
         addresses = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['addresses']), header=True)
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
-            ['combo', 'Site Address:', addresses],
+            ['combo', 'Name:', addresses],
             ['entry', 'Project Scope:'],
             ['entry', 'Project Path:']
         ], 2, 1, 0)

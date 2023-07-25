@@ -42,9 +42,9 @@ def get_proj_data(data_fetched, data, proj_options):
     proj_scope = data['Project Scope']
     proj_rep = data['Proposal Sales Rep']
     proj_name = f"{proj_client}_{proj_scope}"
+    proj_subfac = utils.get_proj_subfac(data)
     proj_id = utils.get_proj_id(data_fetched)
     proj_url = utils.get_proj_url(data_fetched)
-    proj_subfac = utils.get_proj_subfac(data_fetched)
 
     proj_data = {
         'id': proj_id,
