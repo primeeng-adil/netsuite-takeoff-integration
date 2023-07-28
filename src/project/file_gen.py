@@ -21,6 +21,7 @@ def create_takeoff_file(src: Path, dest: Path, proj_data: dict):
     key_value_pairs = [
         ['XXXX', proj_data['id']],
         ['TODAYSDATE', today_date],
+        ['NAMEHERE', proj_data['rep']],
         ['CLIENT', proj_data['client']],
         ['PROJECT NAME', proj_data['name']],
         ['PROJECT TYPE', proj_data['type']],
