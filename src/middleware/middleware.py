@@ -131,7 +131,7 @@ def run_middleware(app) -> None:
             app.update_progress('Error occurred', 10)
             app.log.insert(tkinter.END, str(ex))
         if app.controller:
-            app.controller.quit()
+            app.controller.close()
         return
 
     app.update_progress('Finishing', 20)

@@ -304,6 +304,7 @@ class App(Tk):
         """
         self.pb_status = StringVar()
         self.pb_window = utils.open_new_window(self, "Progress", 450, 300, 6, 3)
+        self.pb_window.protocol('WM_DELETE_WINDOW', self.stop_progress)
         self.pb = Progressbar(self.pb_window, orient=HORIZONTAL, mode='determinate')
         self.pb.grid(row=2, column=0, columnspan=3, sticky=EW, padx=20)
 
@@ -326,8 +327,8 @@ class App(Tk):
         self.pb_window.destroy()
         self.pb_window = None
         if self.controller:
-            self.controller.quit()
-            del self.controller
+            self.controller.close()
+            self.controller = None
 
     def update_progress(self, status: str, inc: float):
         """
