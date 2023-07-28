@@ -38,13 +38,13 @@ def validate_func(*argv):
     """
     controller, element = argv[0], argv[1]
     textbox = controller.elem_handler.elements[4]
-    if controller.element_exists(textbox, retry=0, timeout=10):
+    if controller.element_exists(textbox, retry=0, timeout=2):
         index = controller.elem_handler.elements.index(element)
         answer_element = controller.elem_handler.elements[index + 1]
         controller.elem_handler.elements.remove(answer_element)
         return
 
-    webelement = controller.get_element(element, retry=0, timeout=10)
+    webelement = controller.get_element(element, retry=0, timeout=2)
     answer = questions[webelement.text]
     index = controller.elem_handler.elements.index(element)
     controller.elem_handler.elements[index + 1]['keys'] = answer + Keys.ENTER
