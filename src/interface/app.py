@@ -326,9 +326,12 @@ class App(Tk):
         self.pb.destroy()
         self.pb_window.destroy()
         self.pb_window = None
-        if self.controller:
+
+        try:
             self.controller.close()
-            self.controller = None
+        except Exception as ex:
+            pass
+        self.controller = None
 
     def update_progress(self, status: str, inc: float):
         """
