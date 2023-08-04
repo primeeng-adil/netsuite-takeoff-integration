@@ -10,4 +10,4 @@ def add_keys_to_elements(keys, elements, start=0, term_str=''):
     for i in range(start, len(elements)):
         if 'action' in elements[i] and 'keys' in elements[i]:
             if 'send-keys' in elements[i]['action']:
-                elements[i]['keys'] = keys[elements[i]['keys']] + term_str
+                elements[i]['keys'] = f"{keys[elements[i]['keys']]}{term_str}".strip()
