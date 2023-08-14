@@ -291,6 +291,7 @@ class App(Tk):
         req_vars = dict(itertools.islice(self.data_vars.items(), 2))
         req_vars.update(dict(itertools.islice(self.data_vars.items(), 9, len(self.data_vars) - 2)))
         req_vars.pop('Project Scope')
+        req_vars.pop('Name')
         for key in req_vars:
             req_var = req_vars[key]
             if isinstance(req_var, StringVar) and not req_var.get() or req_var.get() == 'Select...':
@@ -414,6 +415,8 @@ class App(Tk):
         """
         data_dict = {}
         for key in self.data_vars:
+            if self.data_vars[key].get() == 'Select...':
+                self.data_vars[key].set('')
             data_dict.update({key: self.data_vars[key].get()})
         return data_dict
 
