@@ -155,3 +155,17 @@ def get_elements() -> list:
         {'loc': 'css', 'value': '#custrecord_appfproj_fs_lbl_uir_label + span', 'retrieve': 'text'},
         {'custom': fetch_current_url, 'retrieve': 'url'}
     ]
+
+def get_elements_2() -> list:
+    """
+    Return a list of elements.
+
+    :return: static element list for WebController
+    """
+
+    return [
+        {'loc': 'id', 'value': 'email', 'custom': check_for_auto_populate},
+        {'loc': 'id', 'value': 'password', 'custom': check_for_auto_populate},
+        {'loc': 'css', 'value': r'tbody tbody tr td.smalltextnolink.text-opensans', 'custom': validate_func},
+        {'loc': 'name', 'value': 'answer', 'action': 'send-keys'}
+    ]

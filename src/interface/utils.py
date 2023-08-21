@@ -275,6 +275,15 @@ def browse_directory(str_var: StringVar):
     str_var.set(filedialog.askdirectory())
 
 
+def browse_file(str_var: StringVar):
+    """
+    Open the browse file window.
+
+    :param str_var: variable to store the path of the selected file
+    """
+    str_var.set(filedialog.askopenfilename())
+
+
 def clear_widget(e: Event):
     """
     Clear the current widget related to the event object.

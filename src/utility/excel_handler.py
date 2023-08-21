@@ -85,3 +85,8 @@ def fill_row_with_values(sheet, row, values):
     row = sheet[row]
     for value in values:
         row[values.index(value) + 1].value = value
+
+
+def get_adjacent_cell_value(sheet, value):
+    row, col = get_cell_with_value(sheet, value)
+    return sheet.cell(row, col + 1).value

@@ -1,3 +1,5 @@
+from openpyxl import load_workbook
+
 import consts
 import tkinter
 import webbrowser
@@ -5,6 +7,7 @@ from pathlib import Path
 import middleware.utils as utils
 from pywebgo.controller import WebController
 from utility.elem_handler import set_user_pass_questions
+from utility.excel_handler import get_adjacent_cell_value
 
 
 def get_controller(url: list, wait: float) -> WebController:
@@ -99,7 +102,7 @@ def update_quote_log(proj_data):
         utils.update_quote_log(proj_data)
 
 
-def run_middleware(app) -> None:
+def run_takeoff_creation(app) -> None:
     """
     Run the middleware.
 
@@ -109,7 +112,6 @@ def run_middleware(app) -> None:
     data = app.get_data()
     set_user_pass_questions(data)
     proj_options = get_proj_options(data)
-
     app.update_progress('Creating controller elements', 5)
     elements = utils.generate_elements_with_keys(data)
 
@@ -137,3 +139,15 @@ def run_middleware(app) -> None:
     app.update_progress('Finishing', 20)
     app.stop_progress()
     app.show_success_msg()
+
+
+def run_takeoff_transfer(app, path):
+    app.start_progress()
+    data = app.get_data()
+    set_user_pass_questions(data)
+    takeoff_wb = load_workbook(Path(path), keep_vba=True)
+    takeoff_ws = takeoff_wb.worksheets[0]
+    url = get_adjacent_cell_value(takeoff_ws, "NetSuite Proposal Location")
+    app.controller = get_controller([url], app.settings['delay'].get())
+    elements = utils.generate_elements_with_keys(data)
+    app.controller.run_controller(elements)

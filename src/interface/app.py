@@ -11,7 +11,7 @@ from threading import Thread
 from interface import utils
 from utility import csv_handler
 from pywebgo.controller import WebController
-from middleware.middleware import run_middleware
+from middleware.middleware import run_takeoff_creation, run_takeoff_transfer
 
 ctypes.windll.shcore.SetProcessDpiAwareness(1)
 
@@ -62,6 +62,7 @@ class App(Tk):
             '   Login   ',
             '   Proposal   ',
             '   Project   ',
+            '   Transfer   '
         ]
 
         self.settings.update({
@@ -73,7 +74,7 @@ class App(Tk):
             'memo': StringVar()
         })
 
-        self.__create_tabs(3, titles=tab_titles)
+        self.__create_tabs(tab_titles)
         self.__load_settings()
         self.__design_tabs()
         self.__add_cmd_buttons()
@@ -156,15 +157,14 @@ class App(Tk):
             self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
             self.settings['csv-path'].set(str(self.default_csv_path))
 
-    def __create_tabs(self, count: int, titles: list):
+    def __create_tabs(self, titles: list):
         """
         Create the tabs for the application.
 
-        :param count: number of tabs
         :param titles: titles of the tabs
         """
         tab_controller = Notebook(self)
-        for i in range(count):
+        for i in range(len(titles)):
             self.tabs.append(Frame(tab_controller))
             tab_controller.add(self.tabs[i], text=titles[i])
         tab_controller.pack(expand=1, fill='both', padx=20, pady=(10, 0))
@@ -173,17 +173,14 @@ class App(Tk):
         """
         Design and add the content of each tab.
         """
-        self.tab_grid.append([12, 2])
-        self.tab_grid.append([12, 2])
-        self.tab_grid.append([12, 2])
-
-        utils.create_grid(self.tabs[0], *self.tab_grid[0])
-        utils.create_grid(self.tabs[1], *self.tab_grid[1])
-        utils.create_grid(self.tabs[2], *self.tab_grid[2])
+        for i in range(len(self.tabs)):
+            self.tab_grid.append([12, 2])
+            utils.create_grid(self.tabs[i], *self.tab_grid[i])
 
         self.__add_elements_login()
         self.__add_elements_proposal()
         self.__add_elements_project()
+        self.__add_elements_transfer()
 
     def __add_elements_login(self):
         """
@@ -218,7 +215,6 @@ class App(Tk):
         reps = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['reps']), header=True)
         customers = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['customers']), header=True)
         items = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['items']), header=True)
-
         status = ['Initial Review', 'Submitted', 'Closed Won', 'Closed Lost']
         utils.add_heading(self, 'Proposal Info', 1, 0)
         utils.add_fields(self, [
@@ -252,6 +248,13 @@ class App(Tk):
             ['checkbox', 'Configurator']
         ], 2, 1, 1)
 
+    def __add_elements_transfer(self):
+        """
+        Add the elements for the project tab.
+        """
+        utils.add_heading(self, 'Transfer Takeoff', 3, 0)
+        utils.add_fields(self, [['entry', 'Takeoff Excel Path:']], 3, 1, 0)
+
     def __add_cmd_buttons(self):
         """
         Add the command buttons for running and exiting the application.
@@ -271,7 +274,16 @@ class App(Tk):
 
         self.data_vars['Status'].set(self.settings['status'].get())
         self.data_vars['Memo'].set(self.settings['memo'].get())
-        self.add_browse_button(self.tabs[2], 7, 0, self.pad_x, utils.browse_directory, self.data_vars['Project Path'])
+        self.add_button(self.tabs[2], 'Browse', 7, 0, self.pad_x,
+                        utils.browse_directory, self.data_vars['Project Path'])
+        self.add_button(self.tabs[3], 'Browse', 3, 0, self.pad_x,
+                        utils.browse_file, self.data_vars['Takeoff Excel Path'])
+
+        button = Button(self.tabs[3], text='Transfer', command=self.run_transfer)
+        button.grid(row=3, column=0, sticky=W, padx=self.pad_x + 110, pady=15)
+
+        # self.add_button(self.tabs[3], 'Transfer', 3, 0, self.pad_x + 110,
+        #                 self.run_transfer, self.data_vars['Takeoff Excel Path'].get())
 
         tooltip = Label(self.tabs[2], text='(Not required)')
         tooltip.grid(row=3, column=0, sticky=E, padx=self.pad_x)
@@ -442,18 +454,19 @@ class App(Tk):
         utils.show_error_msg("Startup Error", msg)
 
     @staticmethod
-    def add_browse_button(frame, row: int, col: int, pad_x: int, command, arg):
+    def add_button(frame, label: str, row: int, col: int, pad_x: int, command, arg):
         """
         Add a browse button to select a directory.
 
         :param frame: frame object to put the button in
+        :param label: label on the button
         :param row: grid row to place the button in
         :param col: grid column to place the button in
         :param pad_x: horizontal padding
         :param command: function to run on button click
         :param arg: argument for the function
         """
-        button = Button(frame, text="Browse", command=lambda: command(arg))
+        button = Button(frame, text=label, command=lambda: command(arg))
         button.grid(row=row, column=col, sticky=W, padx=pad_x, pady=15)
 
     def run_controller(self):
@@ -462,7 +475,16 @@ class App(Tk):
         """
         if self.__error_handler():
             return
-        execution_thread = Thread(target=run_middleware, args=(self,))
+        execution_thread = Thread(target=run_takeoff_creation, args=(self,))
+        execution_thread.daemon = True
+        execution_thread.start()
+
+    def run_transfer(self):
+        """
+        Execute the takeoff transfer part of the application in a separate thread.
+        """
+        path = self.data_vars['Takeoff Excel Path'].get()
+        execution_thread = Thread(target=run_takeoff_transfer, args=(self, path,))
         execution_thread.daemon = True
         execution_thread.start()
 
@@ -489,7 +511,7 @@ class App(Tk):
         en = Entry(settings_window, textvariable=self.settings['csv-path'])
         en.grid(row=3, column=1, sticky='ew', padx=(0, self.pad_x))
 
-        self.add_browse_button(settings_window, 4, 1, 0, utils.browse_directory, self.settings['csv-path'])
+        self.add_button(settings_window, 'Browse', 4, 1, 0, utils.browse_directory, self.settings['csv-path'])
 
         lb = Label(settings_window, text='Default Checkboxes:')
         lb.grid(row=6, column=0, sticky=NW, padx=self.pad_x)
