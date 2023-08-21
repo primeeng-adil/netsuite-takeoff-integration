@@ -435,6 +435,13 @@ class App(Tk):
         utils.show_error_msg("Error", "Unexpected error occurred. Please check the browser for more info.")
 
     @staticmethod
+    def show_startup_error_msg(msg: str):
+        """
+        Display a startup failure message.
+        """
+        utils.show_error_msg("Startup Error", msg)
+
+    @staticmethod
     def add_browse_button(frame, row: int, col: int, pad_x: int, command, arg):
         """
         Add a browse button to select a directory.
