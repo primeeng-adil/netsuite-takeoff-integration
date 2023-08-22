@@ -274,6 +274,8 @@ class App(Tk):
         self.add_browse_button(self.tabs[2], 7, 0, self.pad_x, utils.browse_directory, self.data_vars['Project Path'])
 
         tooltip = Label(self.tabs[2], text='(Not required)')
+        tooltip.grid(row=1, column=0, sticky=E, padx=self.pad_x)
+        tooltip = Label(self.tabs[2], text='(Not required)')
         tooltip.grid(row=3, column=0, sticky=E, padx=self.pad_x)
         tooltip = Label(self.tabs[0], text='(Not required)')
         tooltip.grid(row=5, column=0, sticky=E, padx=self.pad_x)
