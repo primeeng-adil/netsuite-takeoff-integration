@@ -73,7 +73,7 @@ def update_quote_log(path, proj_data):
     ql_wb = get_excel_workbook(path)
     ql_ws = ql_wb.Worksheets(1)
     last_row = get_last_empty_row(ql_ws, 3)
-    today_date = datetime.datetime.today().strftime('%d-%m-%y')
+    today_date = datetime.datetime.today().strftime('%d-%b-%y')
     network_path = proj_data['job-path']
     try:
         network_path = win32wnet.WNetGetUniversalName(proj_data['job-path'], 1)
