@@ -127,10 +127,9 @@ class App(Tk):
             ['Clear Inputs', self.clear_inputs]
         ]
         help_cmd_funcs = [
-            ['User Guide', self.empty],
+            ['User Guide', self.open_readme],
             ['GitHub Repo', self.open_github],
-            ['Check for Updates...', self.check_updates],
-            ['About', self.empty]
+            ['Check for Updates...', self.check_updates]
         ]
 
         menu_bar = Menu(self)
@@ -537,8 +536,9 @@ class App(Tk):
         webbrowser.open(consts.GITHUB_SRC)
 
     @staticmethod
+    def open_readme():
+        webbrowser.open(consts.GITHUB_SRC + r'/tree/main#readme')
+
+    @staticmethod
     def check_updates():
         webbrowser.open(consts.GITHUB_SRC)
-
-    def empty(self):
-        pass
