@@ -106,6 +106,8 @@ def get_elements() -> list:
         {'loc': 'css', 'value': r'tbody tbody tr td.smalltextnolink.text-opensans', 'custom': validate_func},
         {'loc': 'name', 'value': 'answer', 'action': 'send-keys'},
         {'loc': 'name', 'value': 'custrecord_appfcust_display', 'action': 'send-keys', 'keys': 'Customer'},
+        {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
+         'custom': popup_handler},
         {'loc': 'name', 'value': 'inpt_custrecord_appfproposalstatus', 'action': 'send-keys', 'keys': 'Status'},
         {'loc': 'name', 'value': 'custrecord_proposalmemo', 'action': 'send-keys', 'keys': 'Memo'},
         {'loc': 'name', 'value': 'inpt_custrecord_proposalsales', 'action': 'send-keys', 'keys': 'Proposal Sales Rep'},
