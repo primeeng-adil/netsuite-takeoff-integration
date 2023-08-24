@@ -4,7 +4,7 @@ automatically generate proposals on NetSuite.
 
 ## Installation
 To install the integrator:
-1. Get the latest installer from [here](#www.google.com).
+1. Get the latest installer from [here](https://github.com/primeeng-adil/netsuite-takeoff-integration/releases).
 2. Install the program at desired location
 3. Install chromedriver (refer to [Chromedriver](#Chromedriver))
 4. Run the program!
