@@ -1,10 +1,13 @@
 # NetSuite Takeoff Integrator
 Welcome to the NetSuite Takeoff Integrator repository! The software is intended to be used by Prime Engineering Business Team to 
-automatically generate proposals on NetSuite. The following section details on the installation process:
+automatically generate proposals on NetSuite.
 
 ## Installation
 To install the integrator:
-1. Get the latest installer release from 
+1. Get the latest installer from [here](#www.google.com).
+2. Install the program at desired location
+3. Install chromedriver (refer to [Chromedriver](#Chromedriver))
+4. Run the program!
 
 ## Usage
 Using the integrator is quite simple. The only requirement is to fill in all the mandatory fields, that is all the fields
