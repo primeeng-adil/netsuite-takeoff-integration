@@ -8,7 +8,6 @@ Variables to store NetSuite username, password and security questions.
 questions = {}
 username = ''
 password = ''
-executive = False
 
 
 def set_user_pass_questions(data):
@@ -19,10 +18,8 @@ def set_user_pass_questions(data):
     """
     global username
     global password
-    global executive
     username = data.pop('Username')
     password = data.pop('Password')
-    executive = data.pop('Executive')
     questions.update({
         data.pop('Question 1'): data.pop('Answer 1'),
         data.pop('Question 2'): data.pop('Answer 2'),
@@ -103,13 +100,6 @@ def get_elements() -> list:
 
     :return: static element list for WebController
     """
-    if executive:
-        proj_type_name = 'inpt_custentity1'
-        proj_sales_rep = 'inpt_custentity_prime_sales_rep'
-    else:
-        proj_type_name = 'custentity1_display'
-        proj_sales_rep = 'custentity_prime_sales_rep_display'
-
     return [
         {'loc': 'id', 'value': 'email', 'custom': check_for_auto_populate},
         {'loc': 'id', 'value': 'password', 'custom': check_for_auto_populate},
@@ -142,10 +132,10 @@ def get_elements() -> list:
          'keys': 'Project Template', 'window': 1},
         {'loc': 'name', 'value': 'custentityprime_project_scope', 'action': 'send-keys',
          'keys': 'Project Scope', 'window': 1},
-        {'loc': 'name', 'value': proj_type_name, 'action': 'send-keys', 'keys': 'Project Type', 'window': 1},
+        {'loc': 'active', 'action': 'send-keys', 'keys': 'Project Type', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'window': 1},
-        {'loc': 'name', 'value': proj_sales_rep, 'action': 'send-keys', 'keys': 'Proposal Sales Rep', 'window': 1},
+        {'loc': 'active', 'action': 'send-keys', 'keys': 'Proposal Sales Rep', 'window': 1},
         {'loc': 'name', 'value': 'custentityprime_project_site_name_display', 'action': 'send-keys',
          'keys': 'Name', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',

@@ -194,9 +194,6 @@ class App(Tk):
             ['entry', 'Username:'],
             ['entry', 'Password:']
         ], 0, 1, 0)
-        utils.add_fields(self, [
-            ['checkbox', 'Executive']
-        ], 0, 3, 1)
         utils.add_heading(self, 'Security Questions', 0, 5)
         utils.add_fields(self, [
             ['entry', 'Question 1:'],
@@ -266,7 +263,7 @@ class App(Tk):
         Customize the appearance and behavior of certain elements.
         """
         self.elements[1].config(show="*")
-        for i in range(6, 9):
+        for i in range(5, 8):
             self.elements[i].config(show="*")
 
         self.data_vars['Status'].set(self.settings['status'].get())
@@ -291,7 +288,7 @@ class App(Tk):
         :return: flag indicating error
         """
         req_vars = dict(itertools.islice(self.data_vars.items(), 2))
-        req_vars.update(dict(itertools.islice(self.data_vars.items(), 9, len(self.data_vars) - 2)))
+        req_vars.update(dict(itertools.islice(self.data_vars.items(), 8, len(self.data_vars) - 2)))
         req_vars.pop('Project Scope')
         req_vars.pop('Name')
         for key in req_vars:
@@ -350,13 +347,13 @@ class App(Tk):
         """
         Save the login information to the default CSV file.
         """
-        utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=9)
+        utils.save(self.data_vars, self.default_csv_path / 'login_info.csv', end=8)
 
     def save_login_as(self):
         """
         Save the login information to a new CSV file.
         """
-        utils.save_as(self.data_vars, 'login_data.csv', end=9)
+        utils.save_as(self.data_vars, 'login_data.csv', end=8)
 
     def load_login(self):
         """
@@ -378,13 +375,13 @@ class App(Tk):
         """
         Save the input data to the default CSV file.
         """
-        utils.save(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=9, end=len(self.data_vars))
+        utils.save(self.data_vars, self.default_csv_path / 'last_inputs.csv', start=8, end=len(self.data_vars))
 
     def save_inputs_as(self):
         """
         Save the input data to a new CSV file.
         """
-        utils.save_as(self.data_vars, 'input_data.csv', start=9, end=len(self.data_vars))
+        utils.save_as(self.data_vars, 'input_data.csv', start=8, end=len(self.data_vars))
 
     def load_inputs(self):
         """
