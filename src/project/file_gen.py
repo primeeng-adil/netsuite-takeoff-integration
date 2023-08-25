@@ -112,6 +112,6 @@ def get_excel_workbook(src: Path):
     :param src: path of the Excel workbook
     """
     app, command = 'Excel.Application', pythoncom.CoInitialize
-    excel = client.gencache.EnsureDispatch(app, command())
+    excel = client.Dispatch(app, command())
     excel.DisplayAlerts = False
     return excel.Workbooks.Open(str(src), UpdateLinks=False)
