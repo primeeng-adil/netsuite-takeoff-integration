@@ -11,7 +11,7 @@ def add_keys_to_elements(keys, elements, start=0, term_str=''):
         if 'action' in elements[i] and 'keys' in elements[i]:
             if 'send-keys' in elements[i]['action']:
                 label = elements[i]['keys']
-                elements[i]['keys'] = f"{keys[label]}{term_str}".strip()
+                elements[i]['keys'] = f"{keys[label]}{term_str}"
                 if label == 'Project Scope':
                     elements[i]['keys'] += term_str
 

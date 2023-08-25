@@ -51,6 +51,7 @@ class App(Tk):
         self.default_csv_path = None
         self.settings_window = None
         self.data_path = app_path / 'data'
+        self.default_path = Path.home() / 'Documents' / 'Netsuite Inputs'
 
         utils.adjust_window(self, "NetSuite Takeoff Integrator", 850, 725)
 
@@ -149,10 +150,10 @@ class App(Tk):
         """
         Load the application settings from a CSV file.
         """
-        utils.load(self.settings, Path(self.data_path, 'settings.csv'))
+        utils.load(self.settings, Path(self.default_path, 'settings.csv'))
         self.default_csv_path = Path(self.settings['csv-path'].get())
         if not self.default_csv_path.is_dir() or self.default_csv_path:
-            self.default_csv_path = Path.home() / 'Documents' / 'Netsuite Inputs'
+            self.default_csv_path = self.default_path
             self.settings['csv-path'].set(str(self.default_csv_path))
 
     def __create_tabs(self, count: int, titles: list):
@@ -413,9 +414,13 @@ class App(Tk):
         """
         data_dict = {}
         for key in self.data_vars:
-            if self.data_vars[key].get() == 'Select...':
-                self.data_vars[key].set('')
-            data_dict.update({key: self.data_vars[key].get()})
+            if isinstance(self.data_vars[key], StringVar):
+                data_element = self.data_vars[key].get().strip()
+                if data_element == 'Select...':
+                    data_element = ''
+            else:
+                data_element = self.data_vars[key].get()
+            data_dict.update({key: data_element})
         return data_dict
 
     @staticmethod
@@ -522,7 +527,7 @@ class App(Tk):
 
         :param settings_window: window displaying settings
         """
-        utils.save(self.settings, Path(self.data_path, 'settings.csv'))
+        utils.save(self.settings, Path(self.default_path, 'settings.csv'))
         settings_window.destroy()
 
     @staticmethod
@@ -541,4 +546,4 @@ class App(Tk):
 
     @staticmethod
     def check_updates():
-        webbrowser.open(consts.GITHUB_SRC)
+        webbrowser.open(consts.GITHUB_SRC + r'/releases')
