@@ -17,7 +17,7 @@ def adjust_window(app, title: str, width: int, height: int):
     :param height: height of the window
     """
     position_right = int((app.winfo_screenwidth() - width) / 2)
-    position_down = int((app.winfo_screenheight() - height) / 2 - height / 6)
+    position_down = int((app.winfo_screenheight() - height) / 2 - height / 12)
 
     app.geometry("{}x{}+{}+{}".format(width, height, position_right, position_down))
     app.resizable(height=True, width=True)
