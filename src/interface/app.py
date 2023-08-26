@@ -152,9 +152,11 @@ class App(Tk):
         """
         utils.load(self.settings, Path(self.default_path, 'settings.csv'))
         self.default_csv_path = Path(self.settings['csv-path'].get())
-        if not self.default_csv_path.is_dir() or self.default_csv_path:
+        if not self.default_csv_path.is_dir() or not self.settings['csv-path'].get():
             self.default_csv_path = self.default_path
             self.settings['csv-path'].set(str(self.default_csv_path))
+            self.settings['status'].set('Initial Review')
+            self.settings['memo'].set('2.0.0 – Base Bid')
 
     def __create_tabs(self, count: int, titles: list):
         """
