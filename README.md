@@ -7,8 +7,8 @@ To create the installer, follow these steps:
 1. Clone the [netsuite-takeoff-integration](https://github.com/primeeng-adil/netsuite-takeoff-integration) GitHub repo to your local machine.
 2. Run `setup.bat` in the source directory of the cloned repo. This should create two new directories, `dist` and `build` in the source directory.
 3. Download and install InstallForge from [here](https://installforge.net/download/).
-4. Run InstallForge and open the `config.ip` file from the source directory.
-5. Add all the files in located in `dist/NetSuite Takeoff Integration/` to the **Files** section under **Setup** category on the left pane of the InstallForge.
+4. Run InstallForge and open the `config.ip` file from the source directory by clicking `File > Open` in the menu bar.
+5. Add all the files in located in `dist/NetSuite Takeoff Integration/` to the **Files** section under **Setup** category on the left pane of the InstallForge by dragging and dropping them.
 6. In the **Build** section under the **Build** category, choose where you want the setup to be installed.
 7. Click the **Build** icon in the toolbar at the top to create an installer for the NetSuite Integrator.
 
