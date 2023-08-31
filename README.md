@@ -62,11 +62,11 @@ This process guarantees that the revised `consts.csv` is successfully integrated
 
 ### Switching between Sandbox and Production Environments
 
-To transition between the sandbox and production environments, follow these steps to modify the 'NETSUITE URL' parameter in consts.csv. By default, the URL is set for the sandbox environment. To make the switch to the production environment, simply eliminate the `-sb1` suffix from the URL. This transformation results in a URL resembling:
+To transition between the sandbox and production environments, follow these steps to modify the **NETSUITE URL** parameter in consts.csv. By default, the URL is set for the sandbox environment. To make the switch to the production environment, simply eliminate the `-sb1` suffix from the URL. This transformation results in a URL resembling:
 
 `https://6516658.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=207`
 
-And to switch back to sandbox environment, reinstating the `-sb1` suffix in the NETSUITE URL accomplishes the switch effectively. For example:
+And to switch back to sandbox environment, reinstating the `-sb1` suffix in the **NETSUITE URL** accomplishes the switch effectively. For example:
 
 `https://6516658-sb1.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=207`
 
