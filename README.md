@@ -108,3 +108,20 @@ As the program interfaces with a dynamic browser environment, it's crucial to pr
 3. **Validate Data Existence:** Prior to program execution, verify the existence of both the Customer and Name entries in the relevant NetSuite environment. Precision matters; double-check that the correct NetSuite environment—such as sandbox if applicable—is being used to check the records. Mismatches can lead to errors.
 
 By adhering to these troubleshooting steps, you can enhance the reliability of the program's execution and minimize the likelihood of unexpected crashes.
+
+### Common Errors
+<p align="center">
+<img src="res/error1.png" alt="drawing" width="400"/>
+</p>
+
+<p align="center">
+<img src="res/error2.png" alt="drawing" width="400"/>
+</p>
+
+<p align="center">
+<img src="res/error3.png" alt="drawing" width="400"/>
+</p>
+
+<p align="center">
+<img src="res/error4.png" alt="drawing" width="400"/>
+</p>
