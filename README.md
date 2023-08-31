@@ -132,8 +132,8 @@ This section outlines a description of the most common errors encountered.
 </p>
 
 If you encounter this error while attempting to run the setup, it's likely due to the setup file being located on a network drive. To resolve this, follow these steps:
-1. Copy the setup files from the network drive to your local machine.
-2. Run the setup from your local drive.
+1. **Move Setup:** Copy the setup files from the network drive to your local machine.
+2. **Run Setup:** Run the setup from your local drive.
 
 <p align="center">
 <img src="res/error2.png" alt="Error 2" width="400"/>
