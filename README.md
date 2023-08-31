@@ -2,6 +2,21 @@
 Welcome to the NetSuite Takeoff Integrator repository! The software is intended to be used by Prime Engineering Business Team to 
 automatically generate proposals on NetSuite.
 
+## Table of Contents
+- [Creating the Installer](#creating-the-installer)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Guide to First Time Running the Program](#guide-to-first-time-running-the-program)
+  - [Name and Customer Fields](#name-and-customer-fields)
+  - [Saving Inputs](#saving-inputs)
+  - [Settings Menu](#settings-menu)
+  - [Consts File](#consts-file)
+  - [Switching between Sandbox and Production Environments](#switching-between-sandbox-and-production-environments)
+  - [Chromedriver](#chromedriver)
+  - [Chrome Settings](#chrome-settings)
+- [Troubleshooting](#troubleshooting)
+  - [Common Errors](#common-errors)
+
 ## Creating the Installer
 To create the installer, follow these steps:
 1. Clone the [netsuite-takeoff-integration](https://github.com/primeeng-adil/netsuite-takeoff-integration) GitHub repo to your local machine.
