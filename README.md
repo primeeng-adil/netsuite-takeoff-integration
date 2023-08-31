@@ -131,43 +131,54 @@ This section outlines a description of the most common errors encountered.
 <img src="res/error1.png" alt="Error 1" width="400"/>
 </p>
 
-This error occurs when you try to run the setup on a network drive. Make sure to copy the setup on your local and then run it from there.
+If you encounter this error while attempting to run the setup, it's likely due to the setup file being located on a network drive. To resolve this, follow these steps:
+1. Copy the setup files from the network drive to your local machine.
+2. Run the setup from your local drive.
 
 <p align="center">
 <img src="res/error2.png" alt="Error 2" width="400"/>
 </p>
 
-This error occurs when the program cannot find an element on the NetSuite page. It could be possible that the ID of some element has changed.
-Add some delay to the execution to see where the error is occurring. After the element is located, make sure the ID on it matches the one in the program source code.
+Encountering this error indicates that the program is unable to locate a specific element on the NetSuite page. A potential reason could be a change in the input field's id/name. To address this issue effectively, follow these steps:
+1. **Introduce Execution Delay:** Add a slight delay to the program's execution. This allows you to pinpoint the exact point of failure, potentially highlighting which element (input field) is causing the issue.
+2. **Element ID Check:** Once you've identified the problematic element, cross-reference its id/name with the one specified in the program's source code. Ensure that they match precisely.
 
 <p align="center">
 <img src="res/error3.png" alt="Error 3" width="400"/>
 </p>
 
-This error occurs when any of the Excel files used by the program is already opened and in use by a user.
+This error emerges when the program detects that one of the Excel files it relies upon is already open on your machine. To address this issue, take the following steps:
+1. **File Closure:** Ensure that the Excel file in question is closed on the system where the program is running.
+2. **Exclusive Access:** For smooth program operation, it's essential that the Excel files are not concurrently open across multiple instances or users.
 
 <p align="center">
 <img src="res/error4.png" alt="Error 4" width="400"/>
 </p>
 
-This error occurs when your connection to the network drive (usually A drive) is lost. Make sure you are connected to all the network drives required for the program's execution.
+If you encounter this error, it signifies a disruption in your connection to the network drive, often associated with the A drive. To resolve this issue, follow these steps:
+1. **Check Network Connection:** Ensure that you have a stable and active connection to the required network drives, including the A drive.
+2. **Reconnect Network Drives:** If the connection is lost, attempt to reconnect the network drives associated with the program's operation.
 
 <p align="center">
 <img src="res/error5.png" alt="Error 5" width="400"/>
 </p>
 
-This error occurs when the chromedriver has been disturbed by a user. Exit and rerun the program. Make sure you do not interact with browser when the program is running.
-It could also show up if the browser is not able to keep up with the program speed. In that case it is recommended to add some delay to the execution.
+Should you encounter this error, it indicates potential disruptions to the chromedriver – often stemming from user interactions. To address this, implement the following steps:
+1. **Exit and Rerun:** If the chromedriver's functionality is compromised, exit the program and rerun it. Crucially, refrain from interacting with the browser during the program's execution.
+2. **Browser Performance Consideration:** In some instances, this error could arise due to the browser's inability to match the program's speed. To mitigate this, consider introducing a slight delay into the program's execution.
 
 <p align="center">
 <img src="res/error6.png" alt="Error 6" width="400"/>
 </p>
 
-This error occurs when NetSuite cannot find the value for one of the input fields. Make sure all your inputs are correct and exist on NetSuite (in the respective environment).
-Add some delay to see which input is causing the error.
+Encountering this error signifies that NetSuite is unable to locate the value for one of the input fields. To rectify this issue, implement the following steps:
+1. **Validate Input Accuracy:** Ensure that all input values provided are accurate and correspond to existing records within NetSuite, particularly in the relevant environment.
+2. **Introduction of Delay:** To isolate the input responsible for the error, introduce a delay into the program's execution. This step can help identify which specific input is causing the issue.
 
 <p align="center">
 <img src="res/error7.png" alt="Error 7" width="400"/>
 </p>
 
-This error comes up during Quote Log entry and occurs usually because the Quote Log is in use by someone else.
+Should this error surface during Quote Log entry, it typically signifies that the Quote Log is currently being accessed by another user. To address this situation, consider the following:
+1. **Concurrent Access:** Check whether the Quote Log is currently being used by another individual. Collaborative access to the Quote Log by multiple users can lead to this error.
+2. **Wait and Retry:** If you suspect simultaneous access is causing the issue, wait for a brief period before attempting to access the Quote Log again. This provides time for the current user to complete their task.
