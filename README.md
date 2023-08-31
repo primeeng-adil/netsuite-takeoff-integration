@@ -52,6 +52,15 @@ You can easily store your login information and other details by using the 'Save
 
 > _Note: Do NOT save your login information in a public drive. Always choose to save it locally on your machine. The default location is always your local Documents folder._
 
+### Settings Menu
+You can access the settings window by clicking `File > Settings`. It allows you to change the execution speed of the program by adding a delay (in seconds) for each action. It also enables you to set default values for certain input fields so whenever you run the integrator, it will initialize those fields preloaded with the default values.
+You can also set the storage location for the csv files that contain your login and details information.
+By default, the values are set to:
+1. **Execution Delay:** `0.0`
+2. **Default CSV path:** `C:\Users\<username>\Documents\Netsuite Inputs`
+3. **Status:** `Initial Review`
+4. **Memo:** `2.0.0 – Base Bid`
+
 ### Consts File
 Included within the program is a file named `consts.csv`, found at `<install_path>/data/consts.csv`, which houses vital runtime information utilized by the application. The `consts.csv` file showcases a table of adjustable parameters, each of which holds significance during program execution. Among these parameters, you will encounter the **NETSUITE URL** entry, important for transitioning between sandbox and production environments.
 Noteworthy is the fact that upon modifying the consts file, certain OS settings may not allow you to save the changes directly within the original file. In such instances, consider the following steps:
