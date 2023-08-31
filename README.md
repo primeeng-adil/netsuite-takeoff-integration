@@ -110,18 +110,49 @@ As the program interfaces with a dynamic browser environment, it's crucial to pr
 By adhering to these troubleshooting steps, you can enhance the reliability of the program's execution and minimize the likelihood of unexpected crashes.
 
 ### Common Errors
-<p align="center">
-<img src="res/error1.png" alt="drawing" width="400"/>
-</p>
+This section outlines a description of the most common errors encountered.
 
 <p align="center">
-<img src="res/error2.png" alt="drawing" width="400"/>
+<img src="res/error1.png" alt="Error 1" width="400"/>
 </p>
 
-<p align="center">
-<img src="res/error3.png" alt="drawing" width="400"/>
-</p>
+This error occurs when you try to run the setup on a network drive. Make sure to copy the setup on your local and then run it from there.
 
 <p align="center">
-<img src="res/error4.png" alt="drawing" width="400"/>
+<img src="res/error2.png" alt="Error 2" width="400"/>
 </p>
+
+This error occurs when the program cannot find an element on the NetSuite page. It could be possible that the ID of some element has changed.
+Add some delay to the execution to see where the error is occurring. After the element is located, make sure the ID on it matches the one in the program source code.
+
+<p align="center">
+<img src="res/error3.png" alt="Error 3" width="400"/>
+</p>
+
+This error occurs when any of the Excel files used by the program is already opened and in use by a user.
+
+<p align="center">
+<img src="res/error4.png" alt="Error 4" width="400"/>
+</p>
+
+This error occurs when your connection to the network drive (usually A drive) is lost. Make sure you are connected to all the network drives required for the program's execution.
+
+<p align="center">
+<img src="res/error5.png" alt="Error 5" width="400"/>
+</p>
+
+This error occurs when the chromedriver has been disturbed by a user. Exit and rerun the program. Make sure you do not interact with browser when the program is running.
+It could also show up if the browser is not able to keep up with the program speed. In that case it is recommended to add some delay to the execution.
+
+<p align="center">
+<img src="res/error6.png" alt="Error 6" width="400"/>
+</p>
+
+This error occurs when NetSuite cannot find the value for one of the input fields. Make sure all your inputs are correct and exist on NetSuite (in the respective environment).
+Add some delay to see which input is causing the error.
+
+<p align="center">
+<img src="res/error7.png" alt="Error 7" width="400"/>
+</p>
+
+This error comes up during Quote Log entry and occurs usually because the Quote Log is in use by someone else.
