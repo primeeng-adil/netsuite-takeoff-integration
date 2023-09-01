@@ -139,7 +139,7 @@ def get_elements() -> list:
          'custom': popup_handler, 'window': 1},
         {'loc': 'active', 'action': 'send-keys', 'keys': 'Proposal Sales Rep', 'window': 1},
         {'loc': 'name', 'value': 'custentityprime_project_site_name_display', 'action': 'send-keys',
-         'keys': 'Name', 'window': 1},
+         'keys': 'Site Name', 'window': 1},
         {'loc': 'css', 'value': '.uir-popup-select-content tbody td .smalltextnolink', 'action': 'click',
          'custom': popup_handler, 'window': 1},
         {'loc': 'id', 'value': 'btn_secondarymultibutton_submitter', 'action': 'click', 'window': 1},

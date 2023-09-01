@@ -97,7 +97,7 @@ def get_proj_subfac(data: dict) -> str:
     :param data: data scraped by the controller during runtime
     :return: subfacility name of the project
     """
-    proj_title_words = [word.strip() for word in data['Name'].split('|')]
+    proj_title_words = [word.strip() for word in data['Site Name'].split('|')]
     if len(proj_title_words) == 3:
         return proj_title_words[2]
 

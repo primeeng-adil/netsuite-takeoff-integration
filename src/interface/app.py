@@ -241,7 +241,7 @@ class App(Tk):
         addresses = csv_handler.read_csv_column(Path(consts.DROPDOWN_PATHS['addresses']), header=True)
         utils.add_heading(self, 'Project Info', 2, 0)
         utils.add_fields(self, [
-            ['combo', 'Name:', addresses],
+            ['combo', 'Site Name:', addresses],
             ['entry', 'Project Scope:'],
             ['entry', 'Project Path:']
         ], 2, 1, 0)
@@ -292,7 +292,7 @@ class App(Tk):
         req_vars = dict(itertools.islice(self.data_vars.items(), 2))
         req_vars.update(dict(itertools.islice(self.data_vars.items(), 8, len(self.data_vars) - 2)))
         req_vars.pop('Project Scope')
-        req_vars.pop('Name')
+        req_vars.pop('Site Name')
         for key in req_vars:
             req_var = req_vars[key]
             if isinstance(req_var, StringVar) and not req_var.get() or req_var.get() == 'Select...':
