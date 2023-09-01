@@ -89,7 +89,11 @@ def update_quote_log(path, proj_data):
         proj_data['rep']
     ]
     fill_row_with_values(ql_ws, last_row, row_data)
-    ql_wb.Save()
+    try:
+        ql_wb.Save()
+    except:
+        raise Exception("Error: Unable to save the quote log. It may be in use by another user or application. Please "
+                        "try again.")
     ql_wb.Close()
 
 
