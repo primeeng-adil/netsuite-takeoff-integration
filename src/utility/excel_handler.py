@@ -1,3 +1,6 @@
+from pathlib import Path
+
+
 def get_max_row_col(sheet):
     """
     Get the indices of the max row and column.
@@ -99,6 +102,6 @@ def fill_row_with_values(sheet, row, values):
     """
     for value in values:
         sheet.Cells(row, values.index(value) + 2).Value = value
-        if str(value).startswith("\\\\"):
+        if Path(str(value)).is_dir():
             sheet.Hyperlinks.Add(Anchor=sheet.Cells(row, values.index(value) + 2),
                                  Address=value, TextToDisplay=str(value))
