@@ -100,9 +100,5 @@ def fill_row_with_values(sheet, row, values):
     for value in values:
         sheet.Cells(row, values.index(value) + 2).Value = value
         if str(value).startswith("\\\\"):
-            start = str(value).find("Quotes")
-            if start != -1:
-                start += len("Quotes") + 1
-                display_text = str(value)[start:]
-                sheet.Hyperlinks.Add(Anchor=sheet.Cells(row, values.index(value) + 2),
-                                     Address=value, TextToDisplay=display_text)
+            sheet.Hyperlinks.Add(Anchor=sheet.Cells(row, values.index(value) + 2),
+                                 Address=value, TextToDisplay=str(value))
