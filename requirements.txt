@@ -6,4 +6,4 @@ selenium==4.7.2
 ttkwidgets==0.13.0
 pywin32==306
 chromedriver_autoinstaller==0.4.1
-pyinstaller==5.13.0
+pyinstaller==6.10.0
