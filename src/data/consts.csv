@@ -1,6 +1,6 @@
 ﻿VAR,VAL
 GITHUB_SRC,https://github.com/primeeng-adil/netsuite-takeoff-integration
-NETSUITE_URL,https://6516658-sb1.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=207
+NETSUITE_URL,https://6516658.app.netsuite.com/app/common/custom/custrecordentry.nl?rectype=207
 CHROME_USER_PROFILE,AppData\Local\Google\Chrome\User Data - NTI
 TAKEOFF_PATH,A:\Templates\Take Off Templates\XXXX-takeoff_1.11.5.xltm
 CHECKLIST_PATH,Q:\Templates\Job Opening Checklist\Template_Job Opening Checklist_latest.xltm
