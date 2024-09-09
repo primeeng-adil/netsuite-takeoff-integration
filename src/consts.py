@@ -12,9 +12,10 @@ JOB_DIRS = None
 DROPDOWN_PATHS = None
 
 
-def get_consts_from_csv():
+def get_consts_from_csv(app_path):
     result = {}
-    reader = csv.DictReader(open('./data/consts.csv', encoding='utf-8-sig'))
+    const_file_path = app_path / 'data' / 'consts.csv'
+    reader = csv.DictReader(open(const_file_path, encoding='utf-8-sig'))
     for row in reader:
         result[row['VAR']] = row['VAL']
 

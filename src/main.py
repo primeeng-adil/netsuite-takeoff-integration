@@ -9,7 +9,7 @@ if __name__ == '__main__':
         app_path = Path(sys._MEIPASS)
     else:
         app_path = Path(__file__).parent
-    consts.get_consts_from_csv()
+    consts.get_consts_from_csv(app_path)
     try:
         app = App(app_path)
     except FileNotFoundError as error:
